@@ -15,7 +15,12 @@ class CreateGoodbannersTable extends Migration
     {
         Schema::create('goodbanners', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedInteger('good_id');
+            $table->string('url');
+            $table->string('active')->nullable();       // 是否当封面
             $table->timestamps();
+
+            $table->foreign('good_id')->references('id')->on('goods');
         });
     }
 

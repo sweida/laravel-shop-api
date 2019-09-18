@@ -22,7 +22,7 @@ class CreateOrdersTable extends Migration
             $table->string('expressName');      // 物流名称
             $table->integer('expressPrice');      // 物流金额
             $table->integer('discount')->default(0);        // 优惠金额
-            // 需要订单详情，商品列表
+            // 需要订单详情，购买的商品列表
             $table->timestamps();
         });
     }

@@ -15,7 +15,14 @@ class CreateOrderGoodsTable extends Migration
     {
         Schema::create('order_goods', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedInteger('order_id');
+            $table->unsignedInteger('good_id');
+            $table->integer('price');       // 价格，考虑到价格会变动，所以保存购买时的价格
+            $table->integer('count');       // 数量
             $table->timestamps();
+
+            $table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('good_id')->references('id')->on('goods');
         });
     }
 
