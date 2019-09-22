@@ -15,14 +15,12 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
-            $table->string('email')->unique()->nullable();
-            $table->string('phone')->unique()->nullable();
-            $table->text('avatar_url')->nullable();
-            $table->string('password');
-            $table->integer('captcha')->nullable();
-            $table->text('intro')->nullable();
-            $table->string('is_admin')->nullable();
+            $table->string('openid')->unique();
+            $table->text('nickName');
+            $table->text('avatarUrl')->nullable();
+            $table->string('province')->nullable();
+            $table->string('city')->nullable();
+            $table->string('session_key')->nullable();
             $table->timestamps();
             // unique 唯一
             // nullable 可以为空

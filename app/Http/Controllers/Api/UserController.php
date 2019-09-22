@@ -14,6 +14,55 @@ use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 class UserController extends Controller
 {
+    // 授权登录
+    public function onLogin(Request $request) {
+        $code = $request->get('code');
+        $encryptedData = $request->get('encryptedData');
+        $iv = $request->get('iv');
+        $appid = env('WX_OPENID');
+        $secret = env('WX_SECRET_KEY');
+
+        $client = new \GuzzleHttp\Client();
+        $res = $client->request('GET', 'https://api.weixin.qq.com/sns/jscode2session', [
+            'query' => [
+                'appid' =>$appid,
+                'secret' => $secret,
+                'js_code' => $code,
+                'grant_type' => 'authorization_code'
+            ]
+        ]);
+        $body = json_decode($res->getBody());
+
+        if (property_exists($body, 'errcode')) {
+            return $this->failed('登录授权失败！请重新授权', 200);
+        }
+
+        $openid = $body->openid;
+        $session_key = $body->session_key;
+        
+        $userifo = new \WXBizDataCrypt($appid, $session_key);
+        
+        $errCode = $userifo->decryptData($encryptedData, $iv, $data);
+        $info = json_decode($data);  
+        
+        // if ($errCode != 0) {
+        //     return $this->failed($errCode.' 用户信息解密失败！', 200);
+        // }
+
+        User::updateOrCreate(
+            ['openid' => $openid],
+            [
+                'openid' => $openid,
+                'session_key' => $session_key,
+                'nickName' => $info->nickName,
+                'avatarUrl' => $info->avatarUrl,
+                'province' => $info->province,
+                'city' => $info->city
+            ]
+        );
+        return $this->message('登录成功');
+
+    }
     //用户注册
     public function signup(UserRequest $request){
         User::create($request->all());

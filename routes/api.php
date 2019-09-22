@@ -25,7 +25,7 @@ Route::get('/version', function() {
 
 Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/signup','UserController@signup')->name('users.signup');
-    Route::post('/login','UserController@login')->name('users.login');
+    Route::post('/onlogin','UserController@onLogin')->name('users.onLogin');
     // 管理员登录
     Route::middleware('adminLogin')->group(function () {
         Route::post('/admin/login', 'UserController@login')->name('users.adminlogin');
