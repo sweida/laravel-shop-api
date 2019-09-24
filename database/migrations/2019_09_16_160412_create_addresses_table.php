@@ -19,10 +19,11 @@ class CreateAddressesTable extends Migration
             $table->string('phone');
             $table->string('city');
             $table->string('address');
-            $table->unsignedInteger('user_id');
+            $table->string('active')->nullable();
+            $table->string('user_id');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('openid')->on('users');
         });
     }
 

@@ -22,10 +22,23 @@ use Illuminate\Http\Request;
 Route::get('/version', function() {
     return ["name" => "laravel-shop-api", "author" => "sweida", "version" => "v1"];
 });
+Route::namespace('Api')->prefix('v1')->group(function () {
+    Route::post('/onlogin','UserController@onLogin')->name('users.onLogin');
+
+    // 新增地址
+    Route::post('/address/add','AddressController@add')->name('address.add');
+    Route::post('/address/edit','AddressController@edit')->name('address.edit');
+    Route::post('/address/delete','AddressController@delete')->name('address.delete');
+    Route::post('/address/list','AddressController@list')->name('address.list');
+
+
+});
+
+
 
 Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/signup','UserController@signup')->name('users.signup');
-    Route::post('/onlogin','UserController@onLogin')->name('users.onLogin');
+
     // 管理员登录
     Route::middleware('adminLogin')->group(function () {
         Route::post('/admin/login', 'UserController@login')->name('users.adminlogin');

@@ -44,25 +44,36 @@ class UserController extends Controller
         
         $errCode = $userifo->decryptData($encryptedData, $iv, $data);
         $info = json_decode($data);  
-        
-        // if ($errCode != 0) {
-        //     return $this->failed($errCode.' 用户信息解密失败！', 200);
-        // }
+
+        $filterName = $this->filter($info->nickName);
 
         User::updateOrCreate(
             ['openid' => $openid],
-            [
+            $user = [
                 'openid' => $openid,
                 'session_key' => $session_key,
-                'nickName' => $info->nickName,
+                'nickName' => $filterName,
                 'avatarUrl' => $info->avatarUrl,
                 'province' => $info->province,
                 'city' => $info->city
             ]
         );
-        return $this->message('登录成功');
-
+        return $this->success($user);
     }
+
+    // 去掉昵称特殊字符
+    public function filter($str) {
+        if($str){
+            $name = $str;
+            $name = preg_replace('/\xEE[\x80-\xBF][\x80-\xBF]|\xEF[\x81-\x83][\x80-\xBF]/', '', $name);
+            $name = preg_replace('/xE0[x80-x9F][x80-xBF]‘.‘|xED[xA0-xBF][x80-xBF]/S','?', $name);
+            $return = json_decode(preg_replace("#(\\\ud[0-9a-f]{3})#","",json_encode($name)));
+        }else{
+            $return = '';
+        }
+        return $return;
+    }
+
     //用户注册
     public function signup(UserRequest $request){
         User::create($request->all());
