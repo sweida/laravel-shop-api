@@ -9,10 +9,10 @@ use App\Http\Requests\AddressRequest;
 class AddressController extends Controller
 {
     // 添加地址
-    public function add(AddressRequest $request){
+    public function add(Request $request){
         // 新增地址时判断是否设置默认
         if ($request->active) {
-            $this->removeActive($request->openid);
+            $this->removeActive($request->user_id);
         }
 
         $address = Address::create($request->all());
@@ -27,44 +27,41 @@ class AddressController extends Controller
             'active'=>'active'
         ])->first();
 
-        if (!$oldAddress->isEmpty()) {
-            $oldAddress->active = null;
-            $oldAddress->update($oldAddress);
+        if ($oldAddress) {
+            $oldAddress->update([$oldAddress->active = null]);
         }
     }
 
     // 设置默认地址
     public function setActive(Request $request) {
-        $this->removeActive($request->openid);
+        $this->removeActive($request->user_id);
         
         $address = Address::findOrFail($request->id);
-        $address->active = 'active';
-        $address->update($address);
+        $address->update([$address->active = 'active']);
 
         return $this->message('默认地址设置成功！');
     }
 
     // 修改地址
-    public function edit(AddressRequest $request){
+    public function edit(Request $request){
         if ($request->active) {
-            $this->removeActive($request->openid);
+            $this->removeActive($request->user_id);
         }
-        $article = Article::findOrFail($request->id);
-        $article->update($request->all());
+        $address = Article::findOrFail($request->id);
+        $address->update($request->all());
 
         return $this->message('地址修改成功！');
     }
 
-    // 真删除文章
-    public function delete(AddressRequest $request){
-        Address::find($request->id)->delete();
-        return $this->success('地址删除成功');
+    // 删除地址
+    public function delete(Request $request){
+        Address::findOrFail($request->id)->delete();
+        return $this->message('地址删除成功');
     }
 
-    //获取用户地址
+    //获取用户地址列表
     public function list(Request $request){
-
-        $addressList = Address::where('user_id', $request->openid)->get();
+        $addressList = Address::where('user_id', $request->user_id)->get();
         return $this->success($addressList);
     }
 }

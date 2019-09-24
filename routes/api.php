@@ -27,6 +27,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 
     // 新增地址
     Route::post('/address/add','AddressController@add')->name('address.add');
+    Route::post('/address/setactive','AddressController@setActive')->name('address.setActive');
     Route::post('/address/edit','AddressController@edit')->name('address.edit');
     Route::post('/address/delete','AddressController@delete')->name('address.delete');
     Route::post('/address/list','AddressController@list')->name('address.list');

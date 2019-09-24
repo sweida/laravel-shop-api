@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Models\User;
+use App\Models\Address;
 use Hash;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class UserController extends Controller
         $code = $request->get('code');
         $encryptedData = $request->get('encryptedData');
         $iv = $request->get('iv');
-        $appid = env('WX_OPENID');
+        $appid = env('WX_APPID');
         $secret = env('WX_SECRET_KEY');
 
         $client = new \GuzzleHttp\Client();
@@ -33,6 +34,7 @@ class UserController extends Controller
         ]);
         $body = json_decode($res->getBody());
 
+
         if (property_exists($body, 'errcode')) {
             return $this->failed('登录授权失败！请重新授权', 200);
         }
@@ -45,30 +47,35 @@ class UserController extends Controller
         $errCode = $userifo->decryptData($encryptedData, $iv, $data);
         $info = json_decode($data);  
 
+        // 默认地址
+        $address = Address::where([ 'user_id'=>$openid, 'active'=>'active' ])->first();
+
         // 解密失败时，判断用户是否存在，
         // 1、存在的，解密失败时获取旧的数据即可
         // 2、不存在的要重新授权
         if ($errCode!='0') {
             // 还没注册的
-            $isOldUser = User::findOrFail($openid);
-            if (!$isOldUser->isEmpty()) {
+            $isOldUser = User::where('openid', $openid)->first();
+            
+            if (!$isOldUser) {
                 return $this->failed('获取用户信息失败！', 200);
             } else {
+                $isOldUser->defaultAddress = $address;
                 return $this->success($isOldUser);
             }
         }
 
-        User::updateOrCreate(
-            ['openid' => $openid],
-            $user = [
-                'openid' => $openid,
-                'session_key' => $session_key,
-                'nickName' => $info->nickName,
-                'avatarUrl' => $info->avatarUrl,
-                'province' => $info->province,
-                'city' => $info->city
-            ]
-        );
+        $user = [
+            'openid' => $openid,
+            'session_key' => $session_key,
+            'nickName' => $info->nickName,
+            'avatarUrl' => $info->avatarUrl,
+            'province' => $info->province,
+            'city' => $info->city,
+            'defaultAddress' => $address,
+        ];
+
+        User::updateOrCreate( ['openid' => $openid], $user);
         return $this->success($user);
     }
 
