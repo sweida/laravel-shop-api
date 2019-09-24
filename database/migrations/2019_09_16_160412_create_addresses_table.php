@@ -22,8 +22,6 @@ class CreateAddressesTable extends Migration
             $table->string('active')->nullable();
             $table->string('user_id');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('openid')->on('users');
         });
     }
 

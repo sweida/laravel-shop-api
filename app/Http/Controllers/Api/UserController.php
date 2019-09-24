@@ -45,33 +45,31 @@ class UserController extends Controller
         $errCode = $userifo->decryptData($encryptedData, $iv, $data);
         $info = json_decode($data);  
 
-        $filterName = $this->filter($info->nickName);
+        // 解密失败时，判断用户是否存在，
+        // 1、存在的，解密失败时获取旧的数据即可
+        // 2、不存在的要重新授权
+        if ($errCode!='0') {
+            // 还没注册的
+            $isOldUser = User::findOrFail($openid);
+            if (!$isOldUser->isEmpty()) {
+                return $this->failed('获取用户信息失败！', 200);
+            } else {
+                return $this->success($isOldUser);
+            }
+        }
 
         User::updateOrCreate(
             ['openid' => $openid],
             $user = [
                 'openid' => $openid,
                 'session_key' => $session_key,
-                'nickName' => $filterName,
+                'nickName' => $info->nickName,
                 'avatarUrl' => $info->avatarUrl,
                 'province' => $info->province,
                 'city' => $info->city
             ]
         );
         return $this->success($user);
-    }
-
-    // 去掉昵称特殊字符
-    public function filter($str) {
-        if($str){
-            $name = $str;
-            $name = preg_replace('/\xEE[\x80-\xBF][\x80-\xBF]|\xEF[\x81-\x83][\x80-\xBF]/', '', $name);
-            $name = preg_replace('/xE0[x80-x9F][x80-xBF]‘.‘|xED[xA0-xBF][x80-xBF]/S','?', $name);
-            $return = json_decode(preg_replace("#(\\\ud[0-9a-f]{3})#","",json_encode($name)));
-        }else{
-            $return = '';
-        }
-        return $return;
     }
 
     //用户注册
