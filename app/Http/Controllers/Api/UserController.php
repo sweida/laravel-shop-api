@@ -49,6 +49,8 @@ class UserController extends Controller
 
         // 默认地址
         $address = Address::where([ 'user_id'=>$openid, 'active'=>'active' ])->first();
+        // 收藏夹数量
+        $likeCount = (new CollectionController)->likesGoodCount($openid);
 
         // 解密失败时，判断用户是否存在，
         // 1、存在的，解密失败时获取旧的数据即可
@@ -61,6 +63,7 @@ class UserController extends Controller
                 return $this->failed('获取用户信息失败！', 200);
             } else {
                 $isOldUser->defaultAddress = $address;
+                $isOldUser->likeCount = $likeCount;
                 return $this->success($isOldUser);
             }
         }
@@ -73,6 +76,7 @@ class UserController extends Controller
             'province' => $info->province,
             'city' => $info->city,
             'defaultAddress' => $address,
+            'likeCount' => $likeCount
         ];
 
         User::updateOrCreate( ['openid' => $openid], $user);

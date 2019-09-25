@@ -32,6 +32,16 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/address/delete','AddressController@delete')->name('address.delete');
     Route::post('/address/list','AddressController@list')->name('address.list');
 
+    // 商品模块 
+    Route::post('/good/add','goodController@addGood')->name('good.add');
+    Route::post('/good/detail','goodController@detail')->name('good.detail');
+    Route::post('/good/list','goodController@goodList')->name('good.list');
+    Route::post('/good/like','collectionController@likeGood')->name('good.likeGood');
+    Route::post('/good/unlike','collectionController@unlikeGood')->name('good.unlikeGood');
+    // 收藏列表
+    Route::post('/user/likesGoodList','collectionController@likesGoodList')->name('good.likesGoodList');
+    // 收藏数量
+    // Route::post('/user/likesGoodCount','collectionController@likesGoodCount')->name('good.likesGoodCount');
 
 });
 
