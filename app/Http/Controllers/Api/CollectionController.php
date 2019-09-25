@@ -46,10 +46,11 @@ class CollectionController extends Controller
     public function likesGoodList(CollectionRequest $request) {
         $collections = Collection::where('user_id', $request->user_id)->paginate(20);
 
-        // 这里是没拿到商品被收藏的数量
         foreach($collections as $item){
             $item->good = Good::find($item->good_id);
         }  
+        
+        // 这里是没拿到商品被收藏的数量
 
         return $this->success($collections);
     }

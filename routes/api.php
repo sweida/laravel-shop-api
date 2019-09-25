@@ -43,6 +43,12 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     // 收藏数量
     // Route::post('/user/likesGoodCount','collectionController@likesGoodCount')->name('good.likesGoodCount');
 
+    Route::post('/goodbanner/add','goodbannerController@add')->name('good.add');
+    Route::post('/goodbanner/edit','goodbannerController@edit')->name('good.edit');
+    Route::post('/goodbanner/delete','goodbannerController@delete')->name('good.delete');
+    Route::post('/goodbanner/list','goodbannerController@list')->name('good.list');
+
+
 });
 
 

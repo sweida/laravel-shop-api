@@ -4,15 +4,34 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Models\Good;
+use App\Models\Goodbanner;
 use Illuminate\Http\Request;
 use App\Http\Requests\GoodRequest;
+use Illuminate\Support\Facades\DB;
 
 
 class GoodController extends Controller
 {
     // 添加商品
     public function addGood(Request $request){
-        Good::create($request->all());
+        $good = Good::create($request->all());
+        $banners = $request->get('banners');
+
+        if (!empty($banners)){
+            // 1、Eloquent ORM 方法插入多条
+            // number和good_id 这2个字段一致则更新，否则新增
+            foreach ($banners as $key => $item) {
+                $item['good_id'] = $good['id'];
+
+                Goodbanner::query()->updateOrCreate([
+                    'number' => $item['number'],
+                    'good_id' => $good['id'],
+                ],$item);
+            }
+            // 2、查询构造器方法插入多条（不可以自动添加创建和更新时间）
+            // DB::table('goodbanners')->insert($banners);
+        }
+
         return $this->message('商品新增成功');
     }
 
