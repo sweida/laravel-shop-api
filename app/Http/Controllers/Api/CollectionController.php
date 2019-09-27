@@ -12,22 +12,26 @@ use App\Http\Requests\CollectionRequest;
 class CollectionController extends Controller
 {
     public function likeGood(CollectionRequest $request) {
-        Collection::updateOrCreate(
-            ['user_id' => $request->user_id, 'good_id' => $request->good_id], 
-            $request->all()
-        );
-        return $this->message('已添加到收藏夹');
+        if ($request->get('active')==true) {
+            $collection = Collection::where(
+                    ['user_id' => $request->user_id, 'good_id' => $request->good_id]
+                )->first();
+            if ($collection) {
+                $collection->delete();
+            }
+            return $this->message('已移出收藏夹');
+        } else {
+            Collection::updateOrCreate(
+                ['user_id' => $request->user_id, 'good_id' => $request->good_id], 
+                $request->all()
+            );
+            return $this->message('已添加到收藏夹');
+        }
     }
 
     // 取消收藏
     public function unlikeGood(CollectionRequest $request) {
-        $collection = Collection::where(
-                ['user_id' => $request->user_id, 'good_id' => $request->good_id]
-            )->first();
-        if ($collection) {
-            $collection->delete();
-        }
-        return $this->message('已移出收藏夹');
+
     }
 
     // 获取商品被收藏数量
