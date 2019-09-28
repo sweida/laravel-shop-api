@@ -20,8 +20,9 @@ class CreateArticlesTable extends Migration
             $table->text('img')->nullable();
             $table->text('content')->nullable();
             $table->integer('clicks')->nullable()->default(0);
-            $table->string('classify')->nullable()->default('前端');
+            $table->string('classify')->nullable();
             $table->integer('like')->nullable()->default(0);
+            $table->integer('good_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

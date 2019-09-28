@@ -13,7 +13,7 @@ class Article extends Model
 
     // 接受的字段
     protected $fillable = [
-        'title', 'content', 'like', 'clicks', 'img', 'classify', 'desc'
+        'title', 'content', 'like', 'clicks', 'img', 'classify', 'desc', 'good_id'
     ];
 
     // 表格隐藏的字段

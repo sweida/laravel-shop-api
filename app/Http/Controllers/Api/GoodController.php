@@ -150,11 +150,15 @@ class GoodController extends Controller
         return $this->success($goods);
     }
 
-    // 获取商品分类
+    // 根据商品分类排序获取所有商品
     public function classify(Request $request) {
         $classifys = Good::groupBy('classify')->pluck('classify');
-        return $this->success($classifys);
-        // where('classify', $request->classify)->get()
+        // $classifys = array_values(array_filter($classifys->toArray()));
+        $newData = [];
+        foreach($classifys as $item) {
+            $newData[$item] = Good::where('classify', $item)->orderBy('created_at', 'desc')->get();
+        }
+        return $this->success($newData);
     }
 
     // // 根据分类获取商品

@@ -47,7 +47,7 @@ class AddressController extends Controller
         if ($request->active) {
             $this->removeActive($request->user_id);
         }
-        $address = Article::findOrFail($request->id);
+        $address = Address::findOrFail($request->id);
         $address->update($request->all());
 
         return $this->message('地址修改成功！');

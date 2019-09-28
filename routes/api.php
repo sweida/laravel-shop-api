@@ -50,6 +50,18 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/goodbanner/delete','goodbannerController@delete')->name('good.delete');
     Route::post('/goodbanner/list','goodbannerController@list')->name('good.list');
 
+
+    // 文章
+    Route::post('/article/add', 'ArticleController@add')->name('article.add');
+    Route::post('/article/edit', 'ArticleController@edit')->name('article.edit');
+    Route::post('/article/detail', 'ArticleController@detail')->name('article.detail');
+    Route::post('/article/delete','ArticleController@delete')->name('article.delete');
+    Route::post('/article/restored','ArticleController@restored')->name('article.restored');
+    Route::post('/article/reallydelete','ArticleController@reallyDelete')->name('article.reallyDelete');
+    Route::post('/article/like','ArticleLikeController@like')->name('article.like');
+
+
+
     Route::post('/good/buy','goodController@buy')->name('good.buy');
 
 
@@ -89,15 +101,8 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/article/list', 'ArticleController@list')->name('article.list');
     Route::post('/tag/list', 'TagController@orderbytag')->name('tag.list');
     Route::get('/article/classify', 'ArticleController@classify')->name('article.classify');
-    Route::post('/article/like', 'ArticleController@like')->name('article.like');
     Route::post('/article','ArticleController@detail')->name('article.detail');
-    Route::middleware(['api.refresh', 'adminRole'])->group(function () {
-        Route::post('/article/add', 'ArticleController@add')->name('article.add');
-        Route::post('/article/edit', 'ArticleController@edit')->name('article.edit');
-        Route::post('/article/delete','ArticleController@delete')->name('article.delete');
-        Route::post('/article/restored','ArticleController@restored')->name('article.restored');
-        Route::post('/article/reallydelete','ArticleController@reallyDelete')->name('article.reallyDelete');
-    });
+
 
     // 评论模块
     Route::post('/comment/add', 'CommentController@add')->name('comment.add');
