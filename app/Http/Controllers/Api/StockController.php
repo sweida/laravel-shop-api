@@ -22,4 +22,16 @@ class StockController extends Controller
         return $this->success($good);
     }
 
+    public function checkStock(Request $request) {
+        $stocks = $request->get('stocks');
+        $newStocks = [];
+
+        foreach($stocks as $item){
+            $stock = Stock::where(['good_id' => $item['good_id'], 'label_id' => $item['label_id']])->first();
+            $item['stock'] = $stock->stock;
+            array_push($newStocks, $item);
+        }
+        return $this->success($newStocks);
+    }
+
 }

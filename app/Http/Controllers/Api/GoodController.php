@@ -123,7 +123,7 @@ class GoodController extends Controller
         if($request->all)
             $goods = Good::withTrashed()->orderBy('created_at', 'desc')->paginate(10, $data);
         else if ($request->classify)
-            $goods = Good::whereClassify($request->classify)->orderBy('created_at', 'desc')->paginate(10, $data);
+            $goods = Good::whereClassify($request->classify)->orderBy('created_at', 'desc')->get();
         else
             $goods = Good::orderBy('created_at', 'desc')->paginate(10, $data);
 
@@ -136,6 +136,7 @@ class GoodController extends Controller
             if (!$banner) {
                 $banner = Goodbanner::where('good_id', $item['id'])->first();
             }
+            $item->stocks = Stock::where('good_id', $item['id'])->get();
             $item->defaultBanner = $banner['url'];
         }
 
@@ -154,12 +155,13 @@ class GoodController extends Controller
     public function classify(Request $request) {
         $classifys = Good::groupBy('classify')->pluck('classify');
         // $classifys = array_values(array_filter($classifys->toArray()));
-        $newData = [];
-        foreach($classifys as $item) {
-            $newData[$item] = Good::where('classify', $item)->orderBy('created_at', 'desc')->get();
-        }
-        return $this->success($newData);
+        // $newData = [];
+        // foreach($classifys as $item) {
+        //     $newData[$item] = Good::where('classify', $item)->orderBy('created_at', 'desc')->get();
+        // }
+        return $this->success($classifys);
     }
+    
 
     // // 根据分类获取商品
     // public function getListOrderByClassify(){

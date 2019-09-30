@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Article;
 use App\Models\User;
 use App\Models\ArticleLike;
-use App\Models\Tag;
-use App\Models\Comment;
+use App\Models\Good;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Support\Facades\Redis;
@@ -20,24 +19,33 @@ class ArticleController extends Controller
         return $this->message('文章添加成功！');
     }
 
-    //返回文章列表 10篇为一页
+    // 获取文章所有分类
+    public function classify(){
+        $classifys = Article::groupBy('classify')->pluck('classify');
+        return $this->success($classifys);
+    }
+
+    //返回文章列表 20篇为一页
     public function list(Request $request){
+        $classifys = Article::groupBy('classify')->pluck('classify');
+        
         // 需要显示的字段
         $data = ['id', 'title', 'img', 'classify', 'clicks', 'like', 'created_at', 'deleted_at'];
 
         // 获取所有，包括软删除
         if($request->all)
-            $articles = Article::withTrashed()->orderBy('created_at', 'desc')->paginate(10, $data);
+            $articles = Article::withTrashed()->orderBy('created_at', 'desc')->paginate(20, $data);
         else if ($request->classify)
-            $articles = Article::whereClassify($request->classify)->orderBy('created_at', 'desc')->paginate(10, $data);
+            $articles = Article::whereClassify($request->classify)->orderBy('created_at', 'desc')->paginate(20, $data);
         else
-            $articles = Article::orderBy('created_at', 'desc')->paginate(10, $data);
+            $articles = Article::orderBy('created_at', 'desc')->paginate(20, $data);
 
         // 拿回文章的标签和评论总数
         foreach($articles as $item){
             // $item->view_count = visits($item)->count();
             $item->like_count = ArticleLike::where('article_id', $item->id)->count();
-        }  
+        }
+
         return $this->success($articles);
     }
 
@@ -54,18 +62,26 @@ class ArticleController extends Controller
         $article->clicks +=1;
         $article->save();
 
-        // 文章点赞
-        $likes = ArticleLike::where('article_id', $id)->get();
-        foreach($likes as $item) {
-            $user = User::where('openid', $item->user_id)->first();
-            $item['avatarUrl'] = $user->avatarUrl;
-        }
-        $article['likes'] = $likes;
+        // 商品详情
+        $article->good = Good::find($article->good_id);
+
+        $islike = ArticleLike::where(['article_id' => $id, 'user_id'=> $request->user_id])->first();
+        $article['islike'] = $islike ? true : false; 
 
         // // 访问统计
         // visits($article)->increment();
 
         return $this->success($article);   
+    }
+
+    // 文章点赞列表
+    public function likelist(Request $request) {
+        $likes = ArticleLike::where('article_id', $request->article_id)->get();
+        foreach($likes as $item) {
+            $user = User::where('openid', $item->user_id)->first();
+            $item['avatarUrl'] = $user->avatarUrl;
+        }
+        return $this->success($likes);   
     }
 
     // 修改文章
@@ -95,28 +111,7 @@ class ArticleController extends Controller
         return $this->success('文章删除成功');
     }
 
-    // // 点赞文章
-    // public function like(ArticleRequest $request) {        
-    //     $article = Article::find($request->id);
-    //     $article->like +=1;
-    //     $article->save();
-    //     return $this->message('点赞成功！');
-    // }
 
-    // 获取文章所有分类及分类下的标签
-    public function classify(){
-        $classifys = Article::groupBy('classify')->pluck('classify');
-        $classifys = array_values(array_filter($classifys->toArray()));
-
-        for($i=0;$i<count($classifys);$i++){
-            $tag = Tag::where('classify', $classifys[$i])->get(['tag']);
-            
-            $newArray[$i]['name'] = $classifys[$i];
-            // 去重复
-            $newArray[$i]['tags'] = array_unique(array_column($tag->toArray(), 'tag'));
-        }
-        return $this->success($newArray);
-    }
 
 }
 

@@ -37,7 +37,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/good/edit','goodController@editGood')->name('good.edit');
     Route::post('/good/detail','goodController@detail')->name('good.detail');
     Route::post('/good/list','goodController@goodList')->name('good.list');
-    Route::post('/good/classify','goodController@classify')->name('good.classify');
+    Route::get('/good/classify','goodController@classify')->name('good.classify');
     Route::post('/good/likeGood','collectionController@likeGood')->name('good.likeGood');
     // Route::post('/good/unlike','collectionController@unlikeGood')->name('good.unlikeGood');
     // 收藏列表
@@ -59,10 +59,12 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/article/restored','ArticleController@restored')->name('article.restored');
     Route::post('/article/reallydelete','ArticleController@reallyDelete')->name('article.reallyDelete');
     Route::post('/article/like','ArticleLikeController@like')->name('article.like');
+    Route::post('/article/likelist','ArticleController@likelist')->name('article.likelist');
 
 
 
     Route::post('/good/buy','goodController@buy')->name('good.buy');
+    Route::post('/cart/checkStock','StockController@checkStock')->name('cart.checkStock');
 
 
 
