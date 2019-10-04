@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Stock;
+use App\Models\Good;
 use Illuminate\Http\Request;
 use App\Http\Requests\StockRequest;
 
@@ -22,6 +23,7 @@ class StockController extends Controller
         return $this->success($good);
     }
 
+    // 校验商品库存和获取最新价格，是否下架
     public function checkStock(Request $request) {
         $stocks = $request->get('stocks');
         $newStocks = [];
@@ -29,6 +31,12 @@ class StockController extends Controller
         foreach($stocks as $item){
             $stock = Stock::where(['good_id' => $item['good_id'], 'label_id' => $item['label_id']])->first();
             $item['stock'] = $stock->stock;
+            $item['price'] = $stock->price;
+            $item['vipprice'] = $stock->vipprice;
+            // 商品是否失效
+            $noEmpty = Good::find($stock->good_id);
+            if (!$noEmpty)
+                $item['isDelete'] = true;
             array_push($newStocks, $item);
         }
         return $this->success($newStocks);
