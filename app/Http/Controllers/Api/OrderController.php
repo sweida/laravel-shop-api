@@ -58,14 +58,74 @@ class OrderController extends Controller
         return $this->success($data);
     }
 
-    public function cancelOrder(Request $request) {
-        $order = Order::where('order_id', $request->order_id)->first();
+    public function setStatus($order_id, $num) {
+        $order = Order::where('order_id', $order_id)->first();
         if (!$order) 
             return $this->failed('订单不存在', 200);
 
-        $order->status = 6;
+        $order->status = $num;
         $order->save();
-        return $this->message('订单已取消');
+    }
+
+    // 取消订单 status = 6
+    public function cancelOrder(Request $request) {
+        $order = Order::where('order_id', $request->order_id)->first();
+        if (!$order){
+            return $this->failed('订单不存在', 200);
+        } else if ($order['status'] == 6) {
+            return $this->failed('订单已取消，无需重复提交', 200);
+        } else if ($order['status'] == 1) {
+            $order->status = 6;
+            $order->save();
+            return $this->message('订单已取消');
+        } else {
+            return $this->failed('订单已支付，无法取消订单', 200);
+        }
+
+    }
+
+    // 支付订单 status = 2
+    public function payOrder(Request $request) {
+        $order = Order::where('order_id', $request->order_id)->first();
+        if (!$order){
+            return $this->failed('订单不存在', 200);
+        } else if ($order['status'] == 6) {
+            return $this->failed('订单已取消，请重新下单后再付款', 200);
+        } else if ($order['status'] != 1) {
+            return $this->failed('订单已经支付，请勿重复支付订单', 200);
+        }
+
+        $order->status = 2;
+        $order->save();
+        return $this->message('订单支付成功');
+    }
+
+    // 发货 status = 3
+    public function DeliverGoods(Request $request) {
+        $order = Order::where('order_id', $request->order_id)->first();
+        if (!$order){
+            return $this->failed('订单不存在', 200);
+        } else if ($order['status'] != 2) {
+            return $this->failed('订单还未付款', 200);
+        }
+
+        $order->status = 3;
+        $order->save();
+        return $this->message('订单已经发货');
+    }
+
+    // 确认订单 status = 5
+    public function submitOrder(Request $request) {
+        $order = Order::where('order_id', $request->order_id)->first();
+        if (!$order){
+            return $this->failed('订单不存在', 200);
+        } else if ($order['status'] != 4) {
+            return $this->failed('订单还没签收', 200);
+        }
+
+        $order->status = 5;
+        $order->save();
+        return $this->message('订单已确认');
     }
 
     // 获取个人订单
@@ -73,7 +133,11 @@ class OrderController extends Controller
         // $orders = Order::where('user_id', $request->user_id)->paginate(20);
 
         $status = $request->get('status');
-        $orders = Order::where(['user_id'=> $request->user_id, 'status' => $status])->paginate(20);
+        if ($status == 0) {
+            $orders = Order::where(['user_id'=> $request->user_id])->orderBy('created_at', 'desc')->paginate(20);
+        } else {
+            $orders = Order::where(['user_id'=> $request->user_id, 'status' => $status])->orderBy('created_at', 'desc')->paginate(20);
+        }
 
         foreach($orders as $item) {
             $item['goodList'] = OrderGood::where('order_id', $item->order_id)->get();
