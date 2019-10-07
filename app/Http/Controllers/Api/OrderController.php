@@ -76,7 +76,13 @@ class OrderController extends Controller
             return $this->failed('订单已取消，无需重复提交', 200);
         } else if ($order['status'] == 1) {
             $order->status = 6;
+            $goodList = OrderGood::where('order_id', $request->order_id)->get();
+            // 恢复库存
+            foreach($goodList as $item){
+                (new StockController())->decpStock($item['good_id'], $item['label_id'], $item['count'], 'cancel');
+            }
             $order->save();
+
             return $this->message('订单已取消');
         } else {
             return $this->failed('订单已支付，无法取消订单', 200);

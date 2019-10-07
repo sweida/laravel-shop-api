@@ -12,6 +12,7 @@ class OrderGood extends Model
         'good_id',
         'good_name',
         'label',
+        'label_id',
         'price',
         'count'
     ];
