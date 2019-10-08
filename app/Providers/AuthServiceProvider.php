@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+// use App\Providers\Horizon;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -24,7 +25,14 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        //
+        // Horizon::auth(function($request){
+        //     if (env('APP_ENV','local') =='local') {
+        //         return true;
+        //     } else {
+        //         $get_ip=$request->getClientIp();
+        //         $can_ip=en('HORIZON_IP', '127.0.0.1');
+        //         return $get_ip == $can_ip;
+        //     }
+        // });
     }
 }

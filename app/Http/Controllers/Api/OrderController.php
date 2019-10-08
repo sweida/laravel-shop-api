@@ -7,6 +7,7 @@ use App\Models\Stock;
 use App\Models\Good;
 use App\Models\User;
 use App\Models\OrderGood;
+use App\Jobs\CloseOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
@@ -55,7 +56,13 @@ class OrderController extends Controller
             (new StockController())->decpStock($item['good_id'], $item['label_id'], $item['count'], 'buy');
         }
         
-        Order::create($data);
+        $order = Order::create($data);
+
+        // $order = Order::where('order_id', $orderId)->first();
+        // $order->update([$order->status = 6]);
+        // $this->dispatch(new CloseOrder($order, config('app.order_ttl')));
+
+        CloseOrder::dispatch($order, config('app.order_ttl'));
         return $this->success($data);
     }
 

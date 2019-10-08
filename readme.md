@@ -59,10 +59,15 @@ http://localhost:8080/telescope
 ```
 composer require laravel/horizon
 
+修改.env
+QUEUE_CONNECTION=redis
+
 # 发布配置文件
 php artisan vendor:publish --provider="Laravel\Horizon\HorizonServiceProvider"
 
 php artisan horizon 即可启动所有的队列
+
+### 注意：每次修改job代码都需要重启horizon
 
 # 访问地址
 http://localhost:8080/horizon/dashboard
