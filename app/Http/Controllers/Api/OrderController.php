@@ -43,18 +43,19 @@ class OrderController extends Controller
         $data['order_id'] = $orderId;
         $data['goodPrice'] = $goodPrice;
         $data['totalPay'] = $totalPay;
-
-        Order::create($data);
+        $data['expressPrice'] = $expressPrice;
 
         foreach($goodList as $item){
             // 购买的商品表
             $item['order_id'] = $orderId;
+            $item['good_name'] = $item['title'];
             OrderGood::Create($item);
 
             // 扣减库存
             (new StockController())->decpStock($item['good_id'], $item['label_id'], $item['count'], 'buy');
         }
-
+        
+        Order::create($data);
         return $this->success($data);
     }
 
