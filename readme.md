@@ -65,6 +65,10 @@ QUEUE_CONNECTION=redis
 # 发布配置文件
 php artisan vendor:publish --provider="Laravel\Horizon\HorizonServiceProvider"
 
+# 使用redis队列 需要引入 predis/predis 包
+
+composer require predis/predis
+
 php artisan horizon 即可启动所有的队列
 
 ### 注意：每次修改job代码都需要重启horizon

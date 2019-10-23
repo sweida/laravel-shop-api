@@ -33,12 +33,12 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/address/list','AddressController@list')->name('address.list');
 
     // 商品模块 
-    Route::post('/good/add','goodController@addGood')->name('good.add');
-    Route::post('/good/edit','goodController@editGood')->name('good.edit');
-    Route::post('/good/detail','goodController@detail')->name('good.detail');
-    Route::post('/good/list','goodController@goodList')->name('good.list');
-    Route::get('/good/classify','goodController@classify')->name('good.classify');
-    Route::post('/good/likeGood','collectionController@likeGood')->name('good.likeGood');
+    Route::post('/goods/add','goodController@addGood')->name('good.add');
+    Route::post('/goods/edit','goodController@editGood')->name('good.edit');
+    Route::post('/goods/detail','goodController@detail')->name('good.detail');
+    Route::post('/goods/list','goodController@goodList')->name('good.list');
+    Route::get('/goods/classify','goodController@classify')->name('good.classify');
+    Route::post('/goods/likeGood','collectionController@likeGood')->name('good.likeGood');
     // Route::post('/good/unlike','collectionController@unlikeGood')->name('good.unlikeGood');
     // 收藏列表
     Route::post('/user/likesGoodList','collectionController@likesGoodList')->name('good.likesGoodList');
@@ -80,11 +80,12 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 
 
 Route::namespace('Api')->prefix('v1')->group(function () {
-    Route::post('/signup','UserController@signup')->name('users.signup');
+    Route::post('/admin/signup','AdminController@signup')->name('admin.signup');
+    Route::post('/admin/login', 'AdminController@login')->name('admin.login');
+    Route::post('/admin/list', 'AdminController@list')->name('admin.list');
 
     // 管理员登录
     Route::middleware('adminLogin')->group(function () {
-        Route::post('/admin/login', 'UserController@login')->name('users.adminlogin');
     });
     //当前用户信息
     Route::middleware('api.refresh')->group(function () {
@@ -96,8 +97,8 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/user/send_email','CommonController@send_email')->name('users.send_email');
     Route::post('/user/check_captcha','CommonController@check_captcha')->name('users.check_captcha');
     
+    Route::post('/user/list','UserController@list')->name('users.list');
     Route::middleware(['api.refresh', 'adminRole'])->group(function () {
-        Route::post('/user/list','UserController@list')->name('users.list');
     });
 
     // 图片上传又拍云
