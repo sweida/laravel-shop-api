@@ -162,7 +162,11 @@ class OrderController extends Controller
 
     // 获取所有人订单
     public function allList(Request $request){
-        $orders = Order::where('status', $request->status)->paginate(20);
+        if ($request->status) {
+            $orders = Order::where('status', $request->status)->orderBy('created_at', 'desc')->paginate(20);
+        } else {
+            $orders = Order::orderBy('created_at', 'desc')->paginate(10);
+        }
 
         foreach($orders as $item) {
             $user = User::where('openid', $item->user_id)->first();

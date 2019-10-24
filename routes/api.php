@@ -64,11 +64,11 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 
 
     Route::post('/good/buy','goodController@buy')->name('good.buy');
-    Route::post('/cart/checkStock','StockController@checkStock')->name('cart.checkStock');
+    Route::post('cart/checkStock','StockController@checkStock')->name('cart.checkStock');
 
     Route::post('order/create', 'orderController@createOrder')->name('order.create');
     Route::post('order/personalList', 'orderController@personalList')->name('order.personalList');
-    Route::post('order/allList', 'orderController@allList')->name('order.allList');
+    Route::post('order/list', 'orderController@allList')->name('order.allList');
     Route::post('order/payOrder', 'orderController@payOrder')->name('order.payOrder');
     Route::post('order/DeliverGoods', 'orderController@DeliverGoods')->name('order.DeliverGoods');
     Route::post('order/submitOrder', 'orderController@submitOrder')->name('order.submitOrder');
