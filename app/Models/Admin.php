@@ -29,7 +29,6 @@ class Admin extends Authenticatable implements JWTSubject
 
     // 表格隐藏的字段
     protected $hidden = [
-        'updated_at', 
     ];
 
     //将密码进行加密

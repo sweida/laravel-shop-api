@@ -44,6 +44,22 @@ php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServicePro
 php artisan jwt:secret
 ```
 
+### 安装 swagger
+```
+# 安装
+composer require "darkaonline/l5-swagger:5.8.*"
+
+# 发布配置文件
+php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
+
+# 如果需要支持 @SWG (SWAGGER annotations) ，需要安装这个
+composer require 'zircote/swagger-php:2.*'
+
+# .env文件 ，自动更新文档
+SWAGGER_VERSION=3.0
+L5_SWAGGER_GENERATE_ALWAYS=true
+L5_SWAGGER_BASE_PATH="http://localhost:8080"
+```
 
 ### 安装 telescope
 ```

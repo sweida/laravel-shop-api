@@ -1,0 +1,126 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "小程序商城接口文档",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080"
+        }
+    ],
+    "paths": {
+        "/admin/signup": {
+            "post": {
+                "tags": [
+                    "管理员"
+                ],
+                "summary": "管理员注册",
+                "description": "管理员注册",
+                "operationId": "App\\Http\\Controllers\\Api\\AdminController::signup",
+                "parameters": [
+                    {
+                        "name": "access_token",
+                        "in": "query",
+                        "description": "用户授权",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "description": "Accept header to specify api version",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "The page num of the list",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "The item num per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "管理员注册成功!"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/doc": {
+            "get": {
+                "tags": [
+                    "第一个文档"
+                ],
+                "summary": "swagger版本号",
+                "description": "获取时间接口",
+                "operationId": "TimeShow",
+                "parameters": [
+                    {
+                        "name": "access_token",
+                        "in": "query",
+                        "description": "版本号",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功返回"
+                    },
+                    "400": {
+                        "description": "发生错误"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/hello": {
+            "get": {
+                "tags": [
+                    "第二个文档"
+                ],
+                "summary": "说你好接口",
+                "description": "说你好接口",
+                "operationId": "SayHello",
+                "parameters": [
+                    {
+                        "name": "access_token",
+                        "in": "query",
+                        "description": "用户授权",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "操作成功返回"
+                    },
+                    "400": {
+                        "description": "发生错误"
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    }
+}

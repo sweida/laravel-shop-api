@@ -19,3 +19,5 @@ Route::get('/', function () {
 Route::get('testRedis','RedisController@testRedis')->name('testRedis');
 Route::get('redis/set','RedisController@set')->name('redis.set');
 Route::get('redis/get','RedisController@get')->name('redis.get');
+
+Route::get('/doc',  'SwaggerController@doc');

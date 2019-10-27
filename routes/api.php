@@ -60,6 +60,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/article/reallydelete','ArticleController@reallyDelete')->name('article.reallyDelete');
     Route::post('/article/like','ArticleLikeController@like')->name('article.like');
     Route::post('/article/likelist','ArticleController@likelist')->name('article.likelist');
+    Route::get('/article/classifys','ArticleController@classifys')->name('article.classifys');
 
 
 
@@ -83,6 +84,8 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/admin/signup','AdminController@signup')->name('admin.signup');
     Route::post('/admin/login', 'AdminController@login')->name('admin.login');
     Route::post('/admin/list', 'AdminController@list')->name('admin.list');
+    Route::post('/admin/deleteOrRestored','AdminController@deleteOrRestored')->name('admin.deleteOrRestored');
+    Route::post('/admin/reallyDelete','AdminController@reallyDelete')->name('admin.reallyDelete');
 
     // 管理员登录
     Route::middleware('adminLogin')->group(function () {
@@ -103,9 +106,9 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 
     // 图片上传又拍云
     Route::middleware(['api.refresh', 'adminRole'])->group(function () {
-        Route::post('/image/upload', 'ImageController@upload')->name('image.upload');
-        Route::post('/image/delete', 'ImageController@delete')->name('image.delete');
     });
+    Route::post('/image/upload', 'ImageController@upload')->name('image.upload');
+    Route::post('/image/delete', 'ImageController@delete')->name('image.delete');
 
     // 添加文章模块
     Route::post('/article/list', 'ArticleController@list')->name('article.list');

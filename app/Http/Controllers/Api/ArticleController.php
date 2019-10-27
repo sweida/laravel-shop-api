@@ -20,7 +20,7 @@ class ArticleController extends Controller
     }
 
     // 获取文章所有分类
-    public function classify(){
+    public function classifys(){
         $classifys = Article::groupBy('classify')->pluck('classify');
         return $this->success($classifys);
     }
