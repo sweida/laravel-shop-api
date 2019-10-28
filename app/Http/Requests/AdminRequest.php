@@ -7,31 +7,26 @@ class AdminRequest extends FormRequest
     public function rules()
     {
         switch (FormRequest::getPathInfo()){
-            case '/api/v1/admin/signup':
+            case '/api/'.env('APP_VER').'/admin/signup':
                 return [
-                    'name' => ['required', 'max:16', 'unique:users,name'],
-                    'email' => ['required', 'unique:users,email'],
+                    'name' => ['required', 'max:32', 'unique:admins,name'],
+                    'email' => ['required', 'unique:admins,email'],
                     'password' => ['required', 'between:6,20'],
-                    'phone' => ['unique:users,phone']
+                    'phone' => ['unique:admins,phone']
                 ];
-            case '/api/v1/login':
+            case '/api/'.env('APP_VER').'/admin/login':
                 return [
-                    'name' => ['required', 'max:16', 'exists:users,name'],
-                    'password' => ['required', 'between:6,20'],
-                ];
-            case '/api/v1/admin/login':
-                return [
-                    'name' => ['required', 'max:16', 'exists:users,name'],
+                    'name' => ['required', 'max:32', 'exists:admin_auths,identifier'],
                     'password' => ['required', 'between:6,20'],
                 ];
-            case '/api/v1/user/resetpassword':
+            case '/api/'.env('APP_VER').'/admin/resetpassword':
                 return [
                     'old_password' => ['required', 'between:6,20'],
                     'new_password' => ['required', 'between:6,20'],
                 ];
             default:
                 return [
-                    'id' => ['required', 'exists:users,id']
+                    'id' => ['required', 'exists:admins,id']
                 ];
         }
     }
@@ -42,7 +37,7 @@ class AdminRequest extends FormRequest
         return [
             'name.required'=>'用户名不能为空',
             'name.exists'=>'用户名不存在',
-            'name.max' => '用户名长度不能超过16个字符',
+            'name.max' => '用户名长度不能超过32个字符',
             'name.unique' => '用户名已经存在',
             'email.required' => '邮箱不能为空',
             'email.unique' => '邮箱已经存在',

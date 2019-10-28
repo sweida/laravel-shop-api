@@ -17,9 +17,9 @@ class CreateAdminsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name')->unique();
             $table->string('email')->unique();
-            $table->string('password');
             $table->string('phone')->nullable();
             $table->string('avatarUrl')->nullable();
+            $table->string('info')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

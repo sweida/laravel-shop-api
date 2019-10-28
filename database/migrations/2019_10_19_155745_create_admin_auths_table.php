@@ -15,7 +15,7 @@ class CreateAdminAuthsTable extends Migration
     {
         Schema::create('admin_auths', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('admin_id')->nullable();
+            $table->unsignedInteger('user_id')->nullable();
             $table->string('identity_type');                    // 登录类型
             $table->string('identifier');                       // 登录号
             $table->string('password');                         // 密码

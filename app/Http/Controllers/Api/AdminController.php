@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Admin;
+use App\Models\AdminAuth;
 use Illuminate\Http\Request;
+use App\Http\Requests\AdminRequest;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -57,20 +59,40 @@ class AdminController extends Controller
      *     ),
      * )
      */
-    public function signup(Request $request){
-        Admin::create($request->all());
+    public function signup(AdminRequest $request){
+        $user = Admin::create($request->all());
+        $emailIdentifier = [
+            'user_id' => $user->id,
+            'identity_type' => 'email',
+            'identifier' => $request->email,
+            'password' => $request->password
+        ];
+        $nameIdentifier = [
+            'user_id' => $user->id,
+            'identity_type' => 'name',
+            'identifier' => $request->name,
+            'password' => $request->password
+        ];
+        AdminAuth::create($emailIdentifier);
+        AdminAuth::create($nameIdentifier);
         return $this->message('管理员注册成功');
     }
 
-    // 管理员登录
-    public function login(Request $request){
+    //用户登录
+    public function login(AdminRequest $request){
+        $type = $request->get('type');
         $token=Auth::guard('api')->attempt(
-            ['name'=>$request->name,'password'=>$request->password]
+            [
+                'identity_type' => $type ? $type : 'name', 
+                'identifier'=>$request->name,
+                'password'=>$request->password
+            ]
         );
         if($token) {
-            $user = Auth::guard('api')->user();
-            $user->updated_at = time();
-            $user->update();
+            $adminAuth = Auth::guard('api')->user();
+            $admin = Admin::findOrFail($adminAuth->user_id);
+            $admin->update([$admin->updated_at = time()]);
+
             return $this->success(['token' => 'Bearer ' . $token]);
         }
         return $this->failed('密码有误！', 200);
@@ -92,22 +114,11 @@ class AdminController extends Controller
         return $this->message('操作成功！');
     }
 
-    // 禁用
-    public function delete(Request $request){
-        Admin::findOrFail($request->id)->delete();
-        return $this->message('管理员已禁用');
-    }
-
-    // 启用
-    public function restored(Request $request){
-        Admin::withTrashed()->findOrFail($request->id)->restore();
-        return $this->message('管理员已启用');
-    }
-
     // 真删除
     public function reallyDelete(Request $request){
         Admin::withTrashed()->findOrFail($request->id)->forceDelete();
-        return $this->message('管理员删除成功');
+        AdminAuth::where('user_id', $request->id)->delete();
+        return $this->message('删除管理员成功！');
     }
 
 
