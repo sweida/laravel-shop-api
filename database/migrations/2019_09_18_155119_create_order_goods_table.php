@@ -8,7 +8,7 @@ class CreateOrderGoodsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
+     * 订单商品详情
      * @return void
      */
     public function up()
@@ -18,10 +18,10 @@ class CreateOrderGoodsTable extends Migration
             $table->string('order_id');
             $table->unsignedInteger('good_id');
             $table->string('good_name');
-            $table->string('label')->nullable();        // 规格
-            $table->integer('label_id')->nullable()->default(1);        // 规格
-            $table->integer('price');       // 价格，考虑到价格会变动，所以保存购买时的价格
-            $table->integer('count');       // 数量
+            $table->string('label')->nullable();                        // 规格
+            $table->integer('label_id')->nullable()->default(1);        // 规格编号
+            $table->integer('price');                                   // 价格，考虑到价格会变动，所以保存购买时的价格
+            $table->integer('count');                                   // 购买数量
 
             // $table->foreign('order_id')->references('id')->on('orders');
             // $table->foreign('good_id')->references('id')->on('goods');

@@ -8,13 +8,17 @@ class CreateAdminAuthsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
+     * 多账号登录
      * @return void
      */
     public function up()
     {
         Schema::create('admin_auths', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedInteger('admin_id')->nullable();
+            $table->string('identity_type');                    // 登录类型
+            $table->string('identifier');                       // 登录号
+            $table->string('password');                         // 密码
             $table->timestamps();
         });
     }

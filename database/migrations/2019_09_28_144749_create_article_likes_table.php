@@ -8,7 +8,7 @@ class CreateArticleLikesTable extends Migration
 {
     /**
      * Run the migrations.
-     *
+     * 文章点赞
      * @return void
      */
     public function up()

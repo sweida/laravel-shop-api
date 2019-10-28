@@ -8,7 +8,7 @@ class CreateAddressesTable extends Migration
 {
     /**
      * Run the migrations.
-     *
+     * 用户地址
      * @return void
      */
     public function up()

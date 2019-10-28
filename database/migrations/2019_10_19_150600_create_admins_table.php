@@ -8,7 +8,7 @@ class CreateAdminsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
+     * 管理员表
      * @return void
      */
     public function up()

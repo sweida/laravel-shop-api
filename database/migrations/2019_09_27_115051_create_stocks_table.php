@@ -8,7 +8,7 @@ class CreateStocksTable extends Migration
 {
     /**
      * Run the migrations.
-     *
+     * 商品规格
      * @return void
      */
     public function up()

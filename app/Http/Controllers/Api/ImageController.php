@@ -21,6 +21,6 @@ class ImageController extends Controller
         if($status){
             return $this->message('图片删除成功！');
         }
-        return $this->failed('图片删除失败！');
+        return $this->failed('图片删除失败！', 200);
     }
 }

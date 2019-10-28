@@ -136,6 +136,7 @@ class GoodController extends Controller
             if (!$banner) {
                 $banner = Goodbanner::where('good_id', $item['id'])->first();
             }
+            $item->likeCount = (new CollectionController())->likeCount($item->id);
             $item->stocks = Stock::where('good_id', $item['id'])->get();
             $item->defaultBanner = $banner['url'];
         }

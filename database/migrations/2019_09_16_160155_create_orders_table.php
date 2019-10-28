@@ -8,6 +8,7 @@ class CreateOrdersTable extends Migration
 {
     /**
      * Run the migrations.
+     * 订单  
      * 退货逻辑
      * 1。退货申请， 2.退货申请通过 3.退货申请拒绝 4.退货发货中 5.退货中 5.退货成功
      * @return void
