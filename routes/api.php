@@ -86,6 +86,9 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/admin/list', 'AdminController@list')->name('admin.list');
     Route::post('/admin/deleteOrRestored','AdminController@deleteOrRestored')->name('admin.deleteOrRestored');
     Route::post('/admin/reallyDelete','AdminController@reallyDelete')->name('admin.reallyDelete');
+    Route::post('/admin/changePassword','AdminController@changePassword')->name('admin.changePassword');
+    Route::post('/admin/resetPassword','AdminController@resetPassword')->name('admin.resetPassword');
+    
 
     // 管理员登录
     Route::middleware('adminLogin')->group(function () {

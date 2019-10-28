@@ -121,5 +121,34 @@ class AdminController extends Controller
         return $this->message('删除管理员成功！');
     }
 
+    // 修改密码
+    public function changePassword(AdminRequest $request){
+        $admin = Auth::guard('api')->user();
+        $oldpassword = $request->get('old_password');
+
+        if (!Hash::check($oldpassword, $admin->password))
+            return $this->failed('旧密码错误', 200);
+
+        // 修改所有关联账号密码
+        $adminAuths = AdminAuth::where('user_id', $admin->user_id)->get();
+        foreach($adminAuths as $item){
+            $item->update(['password' => $request->new_password]);
+        }
+
+        return $this->message('密码修改成功！');
+    }
+
+    // 重置密码为123456
+    public function resetPassword(AdminRequest $request){
+        // 修改所有关联账号密码
+        Admin::findOrFail($request->id);
+        $adminAuths = AdminAuth::where('user_id', $request->id)->get();
+        foreach($adminAuths as $item){
+            $item->update(['password' => '123456']);
+        }
+
+        return $this->message('密码重置成功！');
+    }
+
 
 }

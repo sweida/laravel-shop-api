@@ -19,7 +19,7 @@ class AdminRequest extends FormRequest
                     'name' => ['required', 'max:32', 'exists:admin_auths,identifier'],
                     'password' => ['required', 'between:6,20'],
                 ];
-            case '/api/'.env('APP_VER').'/admin/resetpassword':
+            case '/api/'.env('APP_VER').'/admin/changePassword':
                 return [
                     'old_password' => ['required', 'between:6,20'],
                     'new_password' => ['required', 'between:6,20'],
