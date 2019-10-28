@@ -4,20 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OrderGood extends Model
+class GoodsBanner extends Model
 {
     // 接受的字段
     protected $fillable = [
-        'order_id',
-        'good_id',
-        'good_name',
-        'label',
-        'label_id',
-        'price',
-        'count'
+        'goods_id', 'url', 'active', 'number'
     ];
 
     // 数据填充时自动忽略这个字段
     public $timestamps = false;
 
+    // 表格隐藏的字段
+    protected $hidden = [
+        
+    ];
 }

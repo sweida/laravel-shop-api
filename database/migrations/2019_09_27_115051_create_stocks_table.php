@@ -15,7 +15,7 @@ class CreateStocksTable extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('good_id');
+            $table->unsignedInteger('goods_id');
             $table->integer('stock')->nullbale()->default(9999);    // 库存
             $table->string('label')->nullbale();        // 规格
             $table->integer('label_id');        // 规格编号

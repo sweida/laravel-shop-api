@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class Good extends Model
+
+class Goods extends Model
 {
     // 软删除
     use SoftDeletes;

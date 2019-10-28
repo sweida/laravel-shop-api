@@ -2,44 +2,43 @@
 
 namespace App\Http\Controllers\Api;
 
-
-use App\Models\Good;
-use App\Models\Goodbanner;
+use App\Models\Goods;
+use App\Models\GoodsBanner;
 use App\Models\Collection;
 use App\Models\Stock;
 use Illuminate\Http\Request;
-use App\Http\Requests\GoodRequest;
+use App\Http\Requests\GoodsRequest;
 use Illuminate\Support\Facades\DB;
 
 
-class GoodController extends Controller
+class GoodsController extends Controller
 {
     // 添加商品
     public function addGood(Request $request){
-        $good = Good::create($request->all());
+        $good = Goods::create($request->all());
         $banners = $request->get('banners');
         $stocks = $request->get('stocks');
 
         // 规格库存
         foreach ($stocks as $key => $item) {
-            $item['good_id'] = $good['id'];
+            $item['goods_id'] = $good['id'];
 
             Stock::query()->updateOrCreate([
                 'label_id' => $item['label_id'],
-                'good_id' => $good['id'],
+                'goods_id' => $good['id'],
             ],$item);
         }
 
         // 商品图片
         if (!empty($banners)){
             // 1、Eloquent ORM 方法插入多条
-            // number和good_id 这2个字段一致则更新，否则新增
+            // number和goods_id 这2个字段一致则更新，否则新增
             foreach ($banners as $key => $item) {
-                $item['good_id'] = $good['id'];
+                $item['goods_id'] = $good['id'];
 
-                Goodbanner::query()->updateOrCreate([
+                GoodsBanner::query()->updateOrCreate([
                     'number' => $item['number'],
-                    'good_id' => $good['id'],
+                    'goods_id' => $good['id'],
                 ],$item);
             }
             // 2、查询构造器方法插入多条（不可以自动添加创建和更新时间）
@@ -52,7 +51,7 @@ class GoodController extends Controller
     // 修改商品信息
     public function editGood(Request $request){
         // return $this->success($request->all());
-        $good = Good::findOrFail($request->id);
+        $good = Goods::findOrFail($request->id);
 
         $banners = $request->get('banners');
 
@@ -60,22 +59,22 @@ class GoodController extends Controller
 
         if (!empty($stocks)){
             foreach ($stocks as $key => $item) {
-                $item['good_id'] = $good['id'];
+                $item['goods_id'] = $good['id'];
 
                 Stock::query()->updateOrCreate([
                     'label_id' => $item['label_id'],
-                    'good_id' => $good['id'],
+                    'goods_id' => $good['id'],
                 ],$item);
             }
         }
 
         if (!empty($banners)){
             foreach ($banners as $key => $item) {
-                $item['good_id'] = $good['id'];
+                $item['goods_id'] = $good['id'];
 
-                Goodbanner::query()->updateOrCreate([
+                GoodsBanner::query()->updateOrCreate([
                     'number' => $item['number'],
-                    'good_id' => $good['id'],
+                    'goods_id' => $good['id'],
                 ],$item);
             }
         }
@@ -86,16 +85,16 @@ class GoodController extends Controller
 
     // 商品详情
     public function detail(Request $request) {
-        $good = Good::findOrFail($request->id);
+        $good = Goods::findOrFail($request->id);
         // 收藏数量
         $good->likeCount = (new CollectionController())->likeCount($request->id);
-        $good->banners = Goodbanner::where('good_id', $good['id'])->get();
-        $good->stocks = Stock::where('good_id', $good['id'])->get();
+        $good->banners = GoodsBanner::where('goods_id', $good['id'])->get();
+        $good->stocks = Stock::where('goods_id', $good['id'])->get();
         // 购买数量
 
         // 如果有传用户id则查询是否收藏
         
-        $collect = Collection::where(['good_id' => $good['id'], 'user_id'=> $request->user_id])->first();
+        $collect = Collection::where(['goods_id' => $good['id'], 'user_id'=> $request->user_id])->first();
         $good->collect = $collect ? true : false; 
 
         return $this->success($good);
@@ -103,13 +102,13 @@ class GoodController extends Controller
 
     // 下架商品
     public function delete(Request $request){
-        Good::findOrFail($request->id)->delete();
+        Goods::findOrFail($request->id)->delete();
         return $this->message('商品下架成功');
     }
 
     // 恢复下架商品
     public function restored(Request $request){
-        Good::withTrashed()->findOrFail($request->id)->restore();
+        Goods::withTrashed()->findOrFail($request->id)->restore();
         return $this->message('商品恢复成功');
     }
 
@@ -121,23 +120,23 @@ class GoodController extends Controller
 
         // 获取所有，包括软删除
         if($request->all)
-            $goods = Good::withTrashed()->orderBy('created_at', 'desc')->paginate(10, $data);
+            $goods = Goods::withTrashed()->orderBy('created_at', 'desc')->paginate(10, $data);
         else if ($request->classify)
-            $goods = Good::whereClassify($request->classify)->orderBy('created_at', 'desc')->get();
+            $goods = Goods::whereClassify($request->classify)->orderBy('created_at', 'desc')->get();
         else
-            $goods = Good::orderBy('created_at', 'desc')->paginate(10, $data);
+            $goods = Goods::orderBy('created_at', 'desc')->paginate(10, $data);
 
         // 拿到商品封面图
         foreach($goods as $item){
-            $banner = Goodbanner::where([
-                'good_id'=>$item['id'],
+            $banner = GoodsBanner::where([
+                'goods_id'=>$item['id'],
                 'active'=>'active'
             ])->first();
             if (!$banner) {
-                $banner = Goodbanner::where('good_id', $item['id'])->first();
+                $banner = GoodsBanner::where('goods_id', $item['id'])->first();
             }
             $item->likeCount = (new CollectionController())->likeCount($item->id);
-            $item->stocks = Stock::where('good_id', $item['id'])->get();
+            $item->stocks = Stock::where('goods_id', $item['id'])->get();
             $item->defaultBanner = $banner['url'];
         }
 
@@ -154,11 +153,11 @@ class GoodController extends Controller
 
     // 根据商品分类排序获取所有商品
     public function classify(Request $request) {
-        $classifys = Good::groupBy('classify')->pluck('classify');
+        $classifys = Goods::groupBy('classify')->pluck('classify');
         // $classifys = array_values(array_filter($classifys->toArray()));
         // $newData = [];
         // foreach($classifys as $item) {
-        //     $newData[$item] = Good::where('classify', $item)->orderBy('created_at', 'desc')->get();
+        //     $newData[$item] = Goods::where('classify', $item)->orderBy('created_at', 'desc')->get();
         // }
         return $this->success($classifys);
     }
@@ -169,19 +168,15 @@ class GoodController extends Controller
     //     $calssify = $request->get('classify');
 
     //     if($request->all)
-    //         $goods = Good::withTrashed()->where('classify', $calssify)->orderBy('created_at', 'desc')->paginate(10, $data);
+    //         $goods = Goods::withTrashed()->where('classify', $calssify)->orderBy('created_at', 'desc')->paginate(10, $data);
     //     else if ($request->classify)
-    //         $goods = Good::whereClassify($request->classify)->orderBy('created_at', 'desc')->paginate(10, $data);
+    //         $goods = Goods::whereClassify($request->classify)->orderBy('created_at', 'desc')->paginate(10, $data);
     //     else
-    //         $goods = Good::orderBy('created_at', 'desc')->paginate(10, $data);
+    //         $goods = Goods::orderBy('created_at', 'desc')->paginate(10, $data);
 
     // }
 
     public function buy(Request $request) {
-        (new StockController())->decpStock($request->good_id, $request->label_id, $request->count, 'buy');
+        (new StockController())->decpStock($request->goods_id, $request->label_id, $request->count, 'buy');
     }
-
-
-
-
 }

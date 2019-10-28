@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Collection;
-use App\Models\Good;
+use App\Models\Goods;
 use Illuminate\Http\Request;
 use App\Http\Requests\CollectionRequest;
 
@@ -14,7 +14,7 @@ class CollectionController extends Controller
     public function likeGood(CollectionRequest $request) {
         if ($request->get('active')==true) {
             $collection = Collection::where(
-                    ['user_id' => $request->user_id, 'good_id' => $request->good_id]
+                    ['user_id' => $request->user_id, 'goods_id' => $request->goods_id]
                 )->first();
             if ($collection) {
                 $collection->delete();
@@ -22,7 +22,7 @@ class CollectionController extends Controller
             return $this->message('已移出收藏夹');
         } else {
             Collection::updateOrCreate(
-                ['user_id' => $request->user_id, 'good_id' => $request->good_id], 
+                ['user_id' => $request->user_id, 'goods_id' => $request->goods_id], 
                 $request->all()
             );
             return $this->message('已添加到收藏夹');
@@ -35,8 +35,8 @@ class CollectionController extends Controller
     }
 
     // 获取商品被收藏数量
-    public function likeCount($goodId) {
-        $count = Collection::where('good_id', $goodId)->count();
+    public function likeCount($goodsId) {
+        $count = Collection::where('goods_id', $goodsId)->count();
         return $count;
     }
 
@@ -51,7 +51,7 @@ class CollectionController extends Controller
         $collections = Collection::where('user_id', $request->user_id)->paginate(20);
 
         foreach($collections as $item){
-            $item->good = Good::find($item->good_id);
+            $item->good = Goods::find($item->goods_id);
         }  
         
         // 这里是没拿到商品被收藏的数量

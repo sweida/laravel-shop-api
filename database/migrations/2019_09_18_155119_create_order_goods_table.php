@@ -16,8 +16,8 @@ class CreateOrderGoodsTable extends Migration
         Schema::create('order_goods', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('order_id');
-            $table->unsignedInteger('good_id');
-            $table->string('good_name');
+            $table->unsignedInteger('goods_id');
+            $table->string('goods_name');
             $table->string('label')->nullable();                        // 规格
             $table->integer('label_id')->nullable()->default(1);        // 规格编号
             $table->integer('price');                                   // 价格，考虑到价格会变动，所以保存购买时的价格

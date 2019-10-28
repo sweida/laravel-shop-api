@@ -22,7 +22,7 @@ class CreateArticlesTable extends Migration
             $table->integer('clicks')->nullable()->default(0);
             $table->string('classify')->nullable();
             $table->integer('like')->nullable()->default(0);
-            $table->integer('good_id')->nullable();
+            $table->integer('goods_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

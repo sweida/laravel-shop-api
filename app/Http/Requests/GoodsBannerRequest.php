@@ -3,11 +3,11 @@
 namespace App\Http\Requests;
 
 
-class GoodbannerRequest extends FormRequest
+class GoodsBannerRequest extends FormRequest
 {
     public function rules()
     {
-        if (FormRequest::getPathInfo() == '/api/v1/good/addbanner'){
+        if (FormRequest::getPathInfo() == '/api/v1/goods/addbanner'){
             return [
                 'good_id' => ['required', 'exists:goods,id'],
             ];

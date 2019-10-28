@@ -4,20 +4,21 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCollectionsTable extends Migration
+class CreateGoodsBannersTable extends Migration
 {
     /**
      * Run the migrations.
-     *  收藏夹
+     *
      * @return void
      */
     public function up()
     {
-        Schema::create('collections', function (Blueprint $table) {
+        Schema::create('goods_banners', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('user_id');
             $table->unsignedInteger('goods_id');
-            $table->timestamps();
+            $table->string('url');
+            $table->integer('number')->nullable();
+            $table->string('active')->nullable();       // 是否当封面
         });
     }
 
@@ -28,6 +29,6 @@ class CreateCollectionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('collections');
+        Schema::dropIfExists('goods_banners');
     }
 }

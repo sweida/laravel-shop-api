@@ -23,7 +23,7 @@ class OrderController extends Controller
         // 计算付款金额
         $goodPrice = 0;
         foreach($goodList as $item){
-            $good = Stock::where(['good_id' => $item['good_id'], 'label_id' => $item['label_id']])->first();
+            $good = Stock::where(['goods_id' => $item['goods_id'], 'label_id' => $item['label_id']])->first();
 
             // 商品是否失效
             if (!$good)
@@ -53,7 +53,7 @@ class OrderController extends Controller
             OrderGood::Create($item);
 
             // 扣减库存
-            (new StockController())->decpStock($item['good_id'], $item['label_id'], $item['count'], 'buy');
+            (new StockController())->decpStock($item['goods_id'], $item['label_id'], $item['count'], 'buy');
         }
         
         $order = Order::create($data);
@@ -87,7 +87,7 @@ class OrderController extends Controller
             $goodList = OrderGood::where('order_id', $request->order_id)->get();
             // 恢复库存
             foreach($goodList as $item){
-                (new StockController())->decpStock($item['good_id'], $item['label_id'], $item['count'], 'cancel');
+                (new StockController())->decpStock($item['goods_id'], $item['label_id'], $item['count'], 'cancel');
             }
             $order->save();
 
