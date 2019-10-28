@@ -141,7 +141,7 @@ class AdminController extends Controller
     // 重置密码为123456
     public function resetPassword(AdminRequest $request){
         // 修改所有关联账号密码
-        Admin::findOrFail($request->id);
+        Admin::withTrashed()->findOrFail($request->id);
         $adminAuths = AdminAuth::where('user_id', $request->id)->get();
         foreach($adminAuths as $item){
             $item->update(['password' => '123456']);

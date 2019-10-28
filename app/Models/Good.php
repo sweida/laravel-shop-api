@@ -11,7 +11,7 @@ class Good extends Model
 
     // 接受的字段
     protected $fillable = [
-        'title', 'price', 'vipprice', 'classify', 'desc', 'detail', 'stock', 'parameter', 'clicks', 'buys',
+        'title', 'classify', 'desc', 'detail', 'parameter', 'clicks', 'buys', 'banners', 'stocks'
     ];
 
     // 表格隐藏的字段

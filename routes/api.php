@@ -33,12 +33,12 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/address/list','AddressController@list')->name('address.list');
 
     // 商品模块 
-    Route::post('/goods/add','goodController@addGood')->name('good.add');
-    Route::post('/goods/edit','goodController@editGood')->name('good.edit');
-    Route::post('/goods/detail','goodController@detail')->name('good.detail');
-    Route::post('/goods/list','goodController@goodList')->name('good.list');
-    Route::get('/goods/classify','goodController@classify')->name('good.classify');
-    Route::post('/goods/likeGood','collectionController@likeGood')->name('good.likeGood');
+    Route::post('/goods/add','goodsController@addGood')->name('goods.add');
+    Route::post('/goods/edit','goodsController@editGood')->name('goods.edit');
+    Route::post('/goods/detail','goodsController@detail')->name('goods.detail');
+    Route::post('/goods/list','goodsController@goodList')->name('goods.list');
+    Route::get('/goods/classify','goodsController@classify')->name('goods.classify');
+    Route::post('/goods/likeGood','collectionController@likeGood')->name('goods.likeGood');
     // Route::post('/good/unlike','collectionController@unlikeGood')->name('good.unlikeGood');
     // 收藏列表
     Route::post('/user/likesGoodList','collectionController@likesGoodList')->name('good.likesGoodList');
