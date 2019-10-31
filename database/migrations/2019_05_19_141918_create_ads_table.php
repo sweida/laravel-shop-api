@@ -13,7 +13,7 @@ class CreateAdsTable extends Migration
             $table->string('title')->nullable();
             $table->string('url');
             $table->string('type')->nullable();
-            $table->integer('orderbyNum')->nullable();
+            $table->integer('orderbyNum')->nullable()->default(0);
             $table->timestamps();
         });
     }

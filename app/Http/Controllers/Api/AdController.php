@@ -44,6 +44,12 @@ class AdController extends Controller
         return $this->message('删除成功');
     }
 
+    // 批量删除
+    public function BatchDelete(Request $request){
+        Ad::destroy($request->all());
+        return $this->message('批量删除成功');
+    }
+
     // 返回某个类型或者单个id的图片
     public function show(AdRequest $request){
         $type = $request->get('type');

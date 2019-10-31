@@ -160,6 +160,8 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::get('/ad/classifys', 'AdController@classifys')->name('ad.classifys');
     Route::post('/ad/edit', 'AdController@edit')->name('ad.edit');
     Route::post('/ad/delete','AdController@delete')->name('ad.delete');
+    Route::post('/ad/batchDelete','AdController@BatchDelete')->name('ad.BatchDelete');
+    
     Route::post('/webinfo/set', 'WebinfoController@set')->name('webinfo.set');
     Route::middleware(['api.refresh', 'adminRole'])->group(function () {
     });
