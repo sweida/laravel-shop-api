@@ -10,9 +10,10 @@ class CreateAdsTable extends Migration
     {
         Schema::create('ads', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->string('url');
             $table->string('type')->nullable();
+            $table->integer('orderbyNum')->nullable();
             $table->timestamps();
         });
     }

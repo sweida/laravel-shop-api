@@ -8,7 +8,7 @@ class Ad extends Model
 {
     // 接受的字段
     protected $fillable = [
-        'title', 'url', 'type'
+        'title', 'url', 'type', 'orderbyNum'
     ];
 
     // 表格隐藏的字段

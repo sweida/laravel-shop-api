@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Article;
 use App\Models\User;
 use App\Models\ArticleLike;
-use App\Models\Good;
+use App\Models\Goods;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Support\Facades\Redis;
@@ -59,11 +59,10 @@ class ArticleController extends Controller
             $article = Article::find($id);
 
         // 文章浏览量
-        $article->clicks +=1;
-        $article->save();
+        $article->increment('clicks');
 
         // 商品详情
-        $article->good = Good::find($article->good_id);
+        $article->goods = Goods::find($article->goods_id);
 
         $islike = ArticleLike::where(['article_id' => $id, 'user_id'=> $request->user_id])->first();
         $article['islike'] = $islike ? true : false; 
@@ -92,22 +91,21 @@ class ArticleController extends Controller
         return $this->message('文章修改成功！');
     }
 
-
-    // 下架文章
-    public function delete(ArticleRequest $request){
-        Article::findOrFail($request->id)->delete();
-        return $this->message('文章下架成功');
+    // 禁用or启动
+    public function deleteOrRestored(ArticleRequest $request){
+        $article = Article::withTrashed()->findOrFail($request->id);
+        if ($article->deleted_at) {
+            $article->restore();
+        } else {
+            $article->delete();
+        }
+        return $this->message('操作成功！');
     }
 
-    // 恢复下架文章
-    public function restored(ArticleRequest $request){
-        Article::withTrashed()->findOrFail($request->id)->restore();
-        return $this->message('文章恢复成功');
-    }
 
     // 真删除文章
     public function reallyDelete(ArticleRequest $request){
-        Article::findOrFail($request->id)->forceDelete();
+        Article::withTrashed()->findOrFail($request->id)->forceDelete();
         return $this->success('文章删除成功');
     }
 

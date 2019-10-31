@@ -55,8 +55,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/article/add', 'ArticleController@add')->name('article.add');
     Route::post('/article/edit', 'ArticleController@edit')->name('article.edit');
     Route::post('/article/detail', 'ArticleController@detail')->name('article.detail');
-    Route::post('/article/delete','ArticleController@delete')->name('article.delete');
-    Route::post('/article/restored','ArticleController@restored')->name('article.restored');
+    Route::post('/article/deleteOrRestored','ArticleController@deleteOrRestored')->name('article.deleteOrRestored');
     Route::post('/article/reallydelete','ArticleController@reallyDelete')->name('article.reallyDelete');
     Route::post('/article/like','ArticleLikeController@like')->name('article.like');
     Route::post('/article/likelist','ArticleController@likelist')->name('article.likelist');
@@ -157,11 +156,12 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     // 图片广告模块
     Route::post('/ad/list', 'AdController@list')->name('ad.list');
     Route::post('/ad', 'AdController@show')->name('ad.show');
+    Route::post('/ad/add', 'AdController@add')->name('ad.add');
+    Route::get('/ad/classifys', 'AdController@classifys')->name('ad.classifys');
+    Route::post('/ad/edit', 'AdController@edit')->name('ad.edit');
+    Route::post('/ad/delete','AdController@delete')->name('ad.delete');
+    Route::post('/webinfo/set', 'WebinfoController@set')->name('webinfo.set');
     Route::middleware(['api.refresh', 'adminRole'])->group(function () {
-        Route::post('/ad/add', 'AdController@add')->name('ad.add');
-        Route::post('/ad/edit', 'AdController@edit')->name('ad.edit');
-        Route::post('/ad/delete','AdController@delete')->name('ad.delete');
-        Route::post('/webinfo/set', 'WebinfoController@set')->name('webinfo.set');
     });
 
     // 网站信息模块

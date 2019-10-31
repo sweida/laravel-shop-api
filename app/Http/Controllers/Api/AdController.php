@@ -15,9 +15,21 @@ class AdController extends Controller
     }
 
     //返回列表 10篇为一页
-    public function list(){
-        $ads = Ad::orderBy('created_at', 'desc')->paginate(10);
+    public function list(Request $request){
+        $type = $request->get('type');
+
+        if ($type)
+            $ads = Ad::whereType($type)->orderBy('orderbyNum', 'desc')->orderBy('created_at', 'desc')->paginate(10);
+        else
+            $ads = Ad::orderBy('created_at', 'desc')->paginate(10);
+
         return $this->success($ads);
+    }
+
+    // 获取所有分类
+    public function classifys(){
+        $classifys = Ad::groupBy('type')->pluck('type');
+        return $this->success($classifys);
     }
 
     // 修改
