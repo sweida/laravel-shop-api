@@ -87,6 +87,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/admin/reallyDelete','AdminController@reallyDelete')->name('admin.reallyDelete');
     Route::post('/admin/changePassword','AdminController@changePassword')->name('admin.changePassword');
     Route::post('/admin/resetPassword','AdminController@resetPassword')->name('admin.resetPassword');
+    Route::post('/user/center','UserController@center')->name('user.center');
     
 
     // 管理员登录

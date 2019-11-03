@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Models\Address;
+use App\Models\Order;
+use App\Models\Collection;
 use Hash;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
@@ -145,6 +147,21 @@ class UserController extends Controller
 
         $user->update(['password' => $request->new_password]);
         return $this->message('密码修改成功');
+    }
+
+    // 获取用户详细信息，后台数据用
+    public function center(Request $request) {
+        $id = $request->get('id');
+        $user = User::findOrFail($id);
+
+        $user->order = Order::where('user_id', $id);
+        $user->address = Address::where('user_id', $id);
+        $user->collection = Collection::where('user_id', $id);
+        // $user->cart = Cart::where('user_id', $id);
+
+        return $this->success($user);
+
+
     }
 
 
