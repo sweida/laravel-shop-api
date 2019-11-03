@@ -33,22 +33,22 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/address/list','AddressController@list')->name('address.list');
 
     // 商品模块 
-    Route::post('/goods/add','goodsController@addGood')->name('goods.add');
-    Route::post('/goods/edit','goodsController@editGood')->name('goods.edit');
-    Route::post('/goods/detail','goodsController@detail')->name('goods.detail');
-    Route::post('/goods/list','goodsController@goodList')->name('goods.list');
-    Route::get('/goods/classify','goodsController@classify')->name('goods.classify');
-    Route::post('/goods/likeGood','collectionController@likeGood')->name('goods.likeGood');
+    Route::post('/goods/add','GoodsController@addGood')->name('goods.add');
+    Route::post('/goods/edit','GoodsController@editGood')->name('goods.edit');
+    Route::post('/goods/detail','GoodsController@detail')->name('goods.detail');
+    Route::post('/goods/list','GoodsController@goodList')->name('goods.list');
+    Route::get('/goods/classify','GoodsController@classify')->name('goods.classify');
+    Route::post('/goods/likeGood','CollectionController@likeGood')->name('goods.likeGood');
     // Route::post('/good/unlike','collectionController@unlikeGood')->name('good.unlikeGood');
     // 收藏列表
-    Route::post('/user/likesGoodList','collectionController@likesGoodList')->name('good.likesGoodList');
+    Route::post('/user/likesGoodList','CollectionController@likesGoodList')->name('good.likesGoodList');
     // 收藏数量
     // Route::post('/user/likesGoodCount','collectionController@likesGoodCount')->name('good.likesGoodCount');
 
-    Route::post('/goodbanner/add','goodbannerController@add')->name('good.add');
-    Route::post('/goodbanner/edit','goodbannerController@edit')->name('good.edit');
-    Route::post('/goodbanner/delete','goodbannerController@delete')->name('good.delete');
-    Route::post('/goodbanner/list','goodbannerController@list')->name('good.list');
+    Route::post('/goodsbanner/add','GoodbannerController@add')->name('good.add');
+    Route::post('/goodsbanner/edit','GoodbannerController@edit')->name('good.edit');
+    Route::post('/goodsbanner/delete','GoodbannerController@delete')->name('good.delete');
+    Route::post('/goodsbanner/list','GoodbannerController@list')->name('good.list');
 
 
     // 文章
@@ -63,16 +63,16 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 
 
 
-    Route::post('/good/buy','goodController@buy')->name('good.buy');
+    Route::post('/goods/buy','GoodsController@buy')->name('good.buy');
     Route::post('cart/checkStock','StockController@checkStock')->name('cart.checkStock');
 
-    Route::post('order/create', 'orderController@createOrder')->name('order.create');
-    Route::post('order/personalList', 'orderController@personalList')->name('order.personalList');
-    Route::post('order/list', 'orderController@allList')->name('order.allList');
-    Route::post('order/payOrder', 'orderController@payOrder')->name('order.payOrder');
-    Route::post('order/DeliverGoods', 'orderController@DeliverGoods')->name('order.DeliverGoods');
-    Route::post('order/submitOrder', 'orderController@submitOrder')->name('order.submitOrder');
-    Route::post('order/cancel', 'orderController@cancelOrder')->name('order.cancel');
+    Route::post('order/create', 'OrderController@createOrder')->name('order.create');
+    Route::post('order/personalList', 'OrderController@personalList')->name('order.personalList');
+    Route::post('order/list', 'OrderController@allList')->name('order.allList');
+    Route::post('order/payOrder', 'OrderController@payOrder')->name('order.payOrder');
+    Route::post('order/deliverGoods', 'OrderController@DeliverGoods')->name('order.DeliverGoods');
+    Route::post('order/submitOrder', 'OrderController@submitOrder')->name('order.submitOrder');
+    Route::post('order/cancel', 'OrderController@cancelOrder')->name('order.cancel');
 
 
 });
