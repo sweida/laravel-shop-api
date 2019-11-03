@@ -50,7 +50,7 @@ class UserController extends Controller
         // 默认地址
         $address = Address::where([ 'user_id'=>$openid, 'active'=>'active' ])->first();
         // 收藏夹数量
-        $likeCount = (new CollectionController)->likesGoodCount($openid);
+        $likeCount = (new CollectionController)->likesGoodsCount($openid);
 
         // 解密失败时，判断用户是否存在，
         // 1、存在的，解密失败时获取旧的数据即可

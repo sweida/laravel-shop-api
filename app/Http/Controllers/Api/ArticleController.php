@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\User;
 use App\Models\ArticleLike;
 use App\Models\Goods;
+use App\Models\Stock;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Support\Facades\Redis;
@@ -63,6 +64,7 @@ class ArticleController extends Controller
 
         // 商品详情
         $article->goods = Goods::find($article->goods_id);
+        $article->goods->stocks = Stock::where('goods_id', $article->goods_id)->get();
 
         $islike = ArticleLike::where(['article_id' => $id, 'user_id'=> $request->user_id])->first();
         $article['islike'] = $islike ? true : false; 

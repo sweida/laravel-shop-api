@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Goods;
 use App\Models\GoodsBanner;
+use App\Models\OrderGoods;
 use App\Models\Collection;
 use App\Models\Stock;
 use Illuminate\Http\Request;
@@ -41,7 +42,7 @@ class GoodsController extends Controller
                     'goods_id' => $goods['id'],
                 ],$item);
             }
-            // 2、查询构造器方法插入多条（不可以自动添加创建和更新时间）
+            // 2、查询构造器方法插入多条（会自动添加创建和更新时间）
             // DB::table('goodbanners')->insert($banners);
         }
 
@@ -134,6 +135,7 @@ class GoodsController extends Controller
             $item['uid'] = -$item['number'];
         }
         // 购买数量
+        // $goods->buys = OrderGoodes::where('goods_id', $request->id)->count();
 
         // 如果有传用户id则查询是否收藏
         

@@ -38,10 +38,10 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/goods/detail','GoodsController@detail')->name('goods.detail');
     Route::post('/goods/list','GoodsController@goodsList')->name('goods.list');
     Route::get('/goods/classify','GoodsController@classify')->name('goods.classify');
-    Route::post('/goods/likeGood','CollectionController@likeGood')->name('goods.likeGood');
+    Route::post('/goods/likeGoods','CollectionController@likeGoods')->name('goods.likeGoods');
     // Route::post('/good/unlike','collectionController@unlikeGood')->name('good.unlikeGood');
     // 收藏列表
-    Route::post('/user/likesGoodList','CollectionController@likesGoodList')->name('good.likesGoodList');
+    Route::post('/user/likesGoodsList','CollectionController@likesGoodsList')->name('good.likesGoodsList');
     // 收藏数量
     // Route::post('/user/likesGoodCount','collectionController@likesGoodCount')->name('good.likesGoodCount');
 

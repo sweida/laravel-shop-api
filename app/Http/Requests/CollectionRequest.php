@@ -7,14 +7,14 @@ class CollectionRequest extends FormRequest
 {
     public function rules()
     {
-        if (FormRequest::getPathInfo() == '/api/v1/user/likesGoodList'){
+        if (FormRequest::getPathInfo() == '/api/v1/user/likesGoodsList'){
             return [
                 'user_id' => ['required', 'exists:users,openid'],
             ];
         } else {
             return [
                 'user_id' => ['required', 'exists:users,openid'],
-                'good_id' => ['required', 'exists:goods,id'],
+                'goods_id' => ['required', 'exists:goods,id'],
             ];
         }
 

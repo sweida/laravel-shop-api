@@ -11,7 +11,7 @@ use App\Http\Requests\CollectionRequest;
 
 class CollectionController extends Controller
 {
-    public function likeGood(CollectionRequest $request) {
+    public function likeGoods(CollectionRequest $request) {
         if ($request->get('active')==true) {
             $collection = Collection::where(
                     ['user_id' => $request->user_id, 'goods_id' => $request->goods_id]
@@ -30,7 +30,7 @@ class CollectionController extends Controller
     }
 
     // 取消收藏
-    public function unlikeGood(CollectionRequest $request) {
+    public function unlikeGoods(CollectionRequest $request) {
 
     }
 
@@ -41,13 +41,13 @@ class CollectionController extends Controller
     }
 
     // 获取用户收藏数量
-    public function likesGoodCount($userId) {
+    public function likesGoodsCount($userId) {
         $count = Collection::where('user_id', $userId)->count();
         return $count;
     }
 
     // 获取用户收藏夹列表
-    public function likesGoodList(CollectionRequest $request) {
+    public function likesGoodsList(CollectionRequest $request) {
         $collections = Collection::where('user_id', $request->user_id)->paginate(20);
 
         foreach($collections as $item){
