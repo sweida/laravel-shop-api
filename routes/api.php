@@ -36,7 +36,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/goods/add','GoodsController@addGood')->name('goods.add');
     Route::post('/goods/edit','GoodsController@editGood')->name('goods.edit');
     Route::post('/goods/detail','GoodsController@detail')->name('goods.detail');
-    Route::post('/goods/list','GoodsController@goodList')->name('goods.list');
+    Route::post('/goods/list','GoodsController@goodsList')->name('goods.list');
     Route::get('/goods/classify','GoodsController@classify')->name('goods.classify');
     Route::post('/goods/likeGood','CollectionController@likeGood')->name('goods.likeGood');
     // Route::post('/good/unlike','collectionController@unlikeGood')->name('good.unlikeGood');

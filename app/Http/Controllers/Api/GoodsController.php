@@ -157,7 +157,7 @@ class GoodsController extends Controller
 
 
     //返回商品列表 10篇为一页
-    public function goodList(Request $request){
+    public function goodsList(Request $request){
         // 需要显示的字段
         $data = ['id', 'title', 'desc', 'classify', 'clicks', 'created_at', 'deleted_at'];
 
