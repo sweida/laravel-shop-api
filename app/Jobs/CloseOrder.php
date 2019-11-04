@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\Order;
-use App\Models\OrderGood;
+use App\Models\OrderGoods;
 use App\Http\Controllers\Api\StockController;
 
 
@@ -44,9 +44,9 @@ class CloseOrder implements ShouldQueue
             return;
         }
         // 恢复库存
-        $goodList = OrderGood::where('order_id', $this->order->order_id)->get();
-        foreach($goodList as $item){
-            (new StockController())->decpStock($item['good_id'], $item['label_id'], $item['count'], 'cancel');
+        $goodsList = OrderGoods::where('order_id', $this->order->order_id)->get();
+        foreach($goodsList as $item){
+            (new StockController())->decpStock($item['goods_id'], $item['label_id'], $item['count'], 'cancel');
         }
 
         $this->order->status = 6;

@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
 use App\Models\Stock;
-use App\Models\Good;
+use App\Models\Goods;
 use App\Models\User;
-use App\Models\OrderGood;
+use App\Models\OrderGoods;
 use App\Jobs\CloseOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -15,42 +15,43 @@ use Illuminate\Support\Facades\Redis;
 
 class OrderController extends Controller
 {
+    // 生成订单
     public function createOrder(Request $request) {
         $orderId = $this->createOrderNo('order_id');
 
-        $goodList = $request->get('goodList');
+        $goodsList = $request->get('goodsList');
         $discount = $request->get('discount');
         // 计算付款金额
-        $goodPrice = 0;
-        foreach($goodList as $item){
-            $good = Stock::where(['goods_id' => $item['goods_id'], 'label_id' => $item['label_id']])->first();
+        $goodsPrice = 0;
+        foreach($goodsList as $item){
+            $goods = Stock::where(['goods_id' => $item['goods_id'], 'label_id' => $item['label_id']])->first();
 
             // 商品是否失效
-            if (!$good)
+            if (!$goods)
                 return $this->message('商品不存在');
             // 检验库存
-            if ($item['count'] > $good->stock) {
+            if ($item['count'] > $goods->stock) {
                 return $this->message('库存不足，请返回购物车确定后重新下单');
             }
 
-            $item['price'] = $good->price;
-            $goodPrice += $item['price'] * $item['count'];
+            $item['price'] = $goods->price;
+            $goodsPrice += $item['price'] * $item['count'];
 
         }
-        $expressPrice = $goodPrice >= 9000 ? 0 : 1000;
-        $totalPay = $goodPrice + $expressPrice - $discount;
+        $expressPrice = $goodsPrice >= 9000 ? 0 : 1000;
+        $totalPay = $goodsPrice + $expressPrice - $discount;
 
         $data = $request->all();
         $data['order_id'] = $orderId;
-        $data['goodPrice'] = $goodPrice;
+        $data['goodsPrice'] = $goodsPrice;
         $data['totalPay'] = $totalPay;
         $data['expressPrice'] = $expressPrice;
 
-        foreach($goodList as $item){
+        foreach($goodsList as $item){
             // 购买的商品表
             $item['order_id'] = $orderId;
-            $item['good_name'] = $item['title'];
-            OrderGood::Create($item);
+            $item['goods_name'] = $item['title'];
+            OrderGoods::create($item);
 
             // 扣减库存
             (new StockController())->decpStock($item['goods_id'], $item['label_id'], $item['count'], 'buy');
@@ -60,7 +61,7 @@ class OrderController extends Controller
 
         // $order = Order::where('order_id', $orderId)->first();
         // $order->update([$order->status = 6]);
-        // $this->dispatch(new CloseOrder($order, config('app.order_ttl')));
+        $this->dispatch(new CloseOrder($order, config('app.order_ttl')));
 
         CloseOrder::dispatch($order, config('app.order_ttl'));
         return $this->success($data);
@@ -84,9 +85,9 @@ class OrderController extends Controller
             return $this->failed('订单已取消，无需重复提交', 200);
         } else if ($order['status'] == 1) {
             $order->status = 6;
-            $goodList = OrderGood::where('order_id', $request->order_id)->get();
+            $goodsList = OrderGoods::where('order_id', $request->order_id)->get();
             // 恢复库存
-            foreach($goodList as $item){
+            foreach($goodsList as $item){
                 (new StockController())->decpStock($item['goods_id'], $item['label_id'], $item['count'], 'cancel');
             }
             $order->save();
@@ -154,7 +155,7 @@ class OrderController extends Controller
         }
 
         foreach($orders as $item) {
-            $item['goodList'] = OrderGood::where('order_id', $item->order_id)->get();
+            $item['goodsList'] = OrderGoods::where('order_id', $item->order_id)->get();
         }
 
         return $this->success($orders);
@@ -171,7 +172,7 @@ class OrderController extends Controller
         foreach($orders as $item) {
             $user = User::where('openid', $item->user_id)->first();
             $item['userName'] = $user->nickName;
-            $item['goodList'] = OrderGood::where('order_id', $item->order_id)->get();
+            $item['goodsList'] = OrderGoods::where('order_id', $item->order_id)->get();
         }
 
         return $this->success($orders);

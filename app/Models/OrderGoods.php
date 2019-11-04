@@ -20,3 +20,5 @@ class OrderGoods extends Model
     // 数据填充时自动忽略这个字段
     public $timestamps = false;
 }
+
+

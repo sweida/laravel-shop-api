@@ -151,12 +151,13 @@ class UserController extends Controller
 
     // 获取用户详细信息，后台数据用
     public function center(Request $request) {
-        $id = $request->get('id');
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($request->id);
+        // $orders = Order::where('user_id', $user->openid);
+        // $addresses = Address::where('user_id', $user->openid)->get();
 
-        $user->order = Order::where('user_id', $id);
-        $user->address = Address::where('user_id', $id);
-        $user->collection = Collection::where('user_id', $id);
+        $user->orders = Order::where('user_id', $user->openid)->get();
+        $user->addresses = Address::where('user_id', $user->openid)->get();
+        $user->collections = Collection::where('user_id', $user->openid)->get();
         // $user->cart = Cart::where('user_id', $id);
 
         return $this->success($user);

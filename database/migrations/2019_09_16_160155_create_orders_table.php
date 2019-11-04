@@ -20,7 +20,7 @@ class CreateOrdersTable extends Migration
             $table->string('order_id')->unique();
             $table->string('user_id');
             $table->string('status')->default(1);              // 订单状态 1.待付款 2.已付款，待发货 3.已发货 4.已签收，待确定 5.完成 6.取消订单 7.支付超时，已取消订单  
-            $table->integer('goodPrice');                      // 商品总价
+            $table->integer('goodsPrice');                     // 商品总价
             $table->integer('totalPay');                       // 总共应付
             $table->string('expressType');                     // 物流方式
             $table->string('expressName');                     // 物流名称

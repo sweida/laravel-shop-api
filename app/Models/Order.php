@@ -11,7 +11,7 @@ class Order extends Model
         'order_id',
         'user_id',
         'status',
-        'goodPrice',
+        'goodsPrice',
         'totalPay',
         'expressType',
         'expressName',
