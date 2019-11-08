@@ -164,7 +164,15 @@ class OrderController extends Controller
     // 获取所有人订单
     public function allList(Request $request){
         if ($request->status) {
-            $orders = Order::where('status', $request->status)->orderBy('created_at', 'desc')->paginate(20);
+            // 将,切割成数组
+            $status = explode(',', $request->status);
+            $orders = Order::whereIn('status', $status)->orderBy('created_at', 'desc')->paginate(10);
+        } else if ($request->user_id) {
+            $orders = Order::where('user_id', $request->user_id)->orderBy('created_at', 'desc')->paginate(10);
+        } else if ($request->order_id) {
+            $orders = Order::where('order_id', $request->order_id)->orderBy('created_at', 'desc')->paginate(10);
+        } else if ($request->date){
+            $orders = Order::whereDate('created_at', $request->date)->orderBy('created_at', 'desc')->paginate(10);
         } else {
             $orders = Order::orderBy('created_at', 'desc')->paginate(10);
         }

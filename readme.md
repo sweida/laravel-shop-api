@@ -197,6 +197,18 @@ namespace App\Models;
 factory(User::class, 20)->create();
 ```
 
+### 查看日志
+```
+tail -f storage/logs/laravel-2019-11-06.log
+
+# 安装tail工具后
+composer require spatie/laravel-tail
+
+# 这样查看日志
+php artisan tail
+```
+
+
 
 ### redis启动
 ```

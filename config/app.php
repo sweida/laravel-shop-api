@@ -123,6 +123,9 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    // 日志保留时间
+    'log_max_files' => 30,
+
     'order_ttl' => 1800, // 订单30分钟未支付则关闭
 
     /*
