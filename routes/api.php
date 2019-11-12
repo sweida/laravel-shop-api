@@ -123,6 +123,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     // 购物车
     Route::post('cart/add', 'CartController@addGoods');
     Route::post('cart/dec', 'CartController@decGoods');
+    Route::post('cart/person', 'CartController@list');
 
     // 评论模块
     Route::post('/comment/add', 'CommentController@add')->name('comment.add');
