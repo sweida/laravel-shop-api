@@ -16,10 +16,10 @@ class CreateCartsTable extends Migration
         Schema::create('carts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('user_id');
-            $table->integer('good_id');
+            $table->integer('goods_id');
             $table->integer('label_id');
             $table->integer('count')->default(1);
-            $table->string('isDelete')->nullable();
+            // $table->string('isDelete')->nullable();
 
             $table->timestamps();
         });

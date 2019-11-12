@@ -120,6 +120,10 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     Route::post('/article','ArticleController@detail')->name('article.detail');
 
 
+    // 购物车
+    Route::post('cart/add', 'CartController@addGoods');
+    Route::post('cart/dec', 'CartController@decGoods');
+
     // 评论模块
     Route::post('/comment/add', 'CommentController@add')->name('comment.add');
     Route::post('/comment/list', 'CommentController@list')->name('comment.list');

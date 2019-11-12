@@ -9,18 +9,22 @@ use Illuminate\Http\Request;
 class CartController extends Controller
 {
     // 加入购物车
-    public function addCart(Request $request) {
+    public function addGoods(Request $request) {
         $count = $request->get('count');
-        $good_id = $request->get('good_id');
+        $goods_id = $request->get('goods_id');
         $user_id = $request->get('user_id');
         $label_id = $request->get('label_id');
-        $cart = Cart::where([
-            'good_id' => $good_id,
+
+        $goods = Cart::firstOrCreate([
+            'goods_id' => $goods_id,
             'user_id' => $user_id,
             'label_id' => $label_id,
-        ])->first();
+        ], ['count' => $count]);
 
-        return $this->success($cart);
+        $goods->count += $count;
+        $goods->save();
+
+        return $this->success($goods);
     }
 
     public function list(Request $request) {
@@ -29,25 +33,26 @@ class CartController extends Controller
         return $this->success($carts);
     }
 
-    public function decCart(Request $request) {
+    public function decGoods(Request $request) {
+
         $count = $request->get('count');
-        $good_id = $request->get('good_id');
+        $goods_id = $request->get('goods_id');
         $user_id = $request->get('user_id');
         $label_id = $request->get('label_id');
-        $cart = Cart::where([
-            'good_id' => $good_id,
+
+        $goods = Cart::where([
+            'goods_id' => $goods_id,
             'user_id' => $user_id,
             'label_id' => $label_id,
         ])->first();
 
-        if ($count> $cart['count']) {
-            $card->delete();
-        } else {
-            $cart['count'] -= $count;
-            $cart->save();
+        $goods->count -=$count;
+        if ($goods->count <= 0) {
+            $goods->delete();
+            return $this->message('商品删除成功！');
         }
+        $goods->save();
 
-        return $this->message('删除成功');
-
+        return $this->success($goods);
     }
 }

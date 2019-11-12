@@ -23,8 +23,8 @@ class CreateOrderGoodsTable extends Migration
             $table->integer('price');                                   // 价格，考虑到价格会变动，所以保存购买时的价格
             $table->integer('count');                                   // 购买数量
 
-            // $table->foreign('order_id')->references('id')->on('orders');
-            // $table->foreign('good_id')->references('id')->on('goods');
+            $table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('goods_id')->references('id')->on('goods');
         });
     }
 
