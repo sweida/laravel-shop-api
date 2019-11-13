@@ -124,25 +124,27 @@ class GoodsController extends Controller
 
     // 商品详情
     public function detail(Request $request) {
-        $good = Goods::findOrFail($request->id);
+        $goods = Goods::findOrFail($request->id);
         // 收藏数量
-        $good->likeCount = (new CollectionController())->likeCount($request->id);
-        $good->banners = GoodsBanner::where('goods_id', $good['id'])->get();
-        $good->stocks = Stock::where('goods_id', $good['id'])->get();
+        $goods->likeCount = (new CollectionController())->likeCount($request->id);
+        $goods->banners = GoodsBanner::where('goods_id', $goods['id'])->get();
+        $goods->stocks = Stock::where('goods_id', $goods['id'])->get();
 
-        foreach($good['banners'] as $item) {
+        foreach($goods['banners'] as $item) {
             $item['image'] = $item['url'];
             $item['uid'] = -$item['number'];
         }
-        // 购买数量
-        // $goods->buys = OrderGoodes::where('goods_id', $request->id)->count();
+        // 销量
+        $goods->sales = OrderGoods::where('goods_id', $request->id)->sum('count');
+        // 购买次数
+        $goods->buys = OrderGoods::where('goods_id', $request->id)->count();
 
         // 如果有传用户id则查询是否收藏
         
-        $collect = Collection::where(['goods_id' => $good['id'], 'user_id'=> $request->user_id])->first();
-        $good->collect = $collect ? true : false; 
+        $collect = Collection::where(['goods_id' => $goods['id'], 'user_id'=> $request->user_id])->first();
+        $goods->collect = $collect ? true : false; 
 
-        return $this->success($good);
+        return $this->success($goods);
     }
 
     // 下架商品
@@ -173,13 +175,8 @@ class GoodsController extends Controller
 
         // 拿到商品封面图
         foreach($goods as $item){
-            $banner = GoodsBanner::where([
-                'goods_id'=>$item['id'],
-                'active'=>'active'
-            ])->first();
-            if (!$banner) {
-                $banner = GoodsBanner::where('goods_id', $item['id'])->first();
-            }
+            $banner = GoodsBanner::where('goods_id', $item['id'])->orderBy('active', 'desc')->first();
+
             $item->likeCount = (new CollectionController())->likeCount($item->id);
             $item->stocks = Stock::where('goods_id', $item['id'])->get();
             $item->defaultBanner = $banner['url'];

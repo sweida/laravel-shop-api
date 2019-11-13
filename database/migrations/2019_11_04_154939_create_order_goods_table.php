@@ -16,6 +16,7 @@ class CreateOrderGoodsTable extends Migration
         Schema::create('order_goods', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('order_id');
+            $table->string('user_id');
             $table->unsignedInteger('goods_id');
             $table->string('goods_name');
             $table->string('label')->nullable();                        // 规格
@@ -25,6 +26,7 @@ class CreateOrderGoodsTable extends Migration
 
             $table->foreign('order_id')->references('id')->on('orders');
             $table->foreign('goods_id')->references('id')->on('goods');
+            $table->foreign('user_id')->references('openid')->on('users');
         });
     }
 

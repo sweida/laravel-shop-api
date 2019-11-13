@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Cart;
+use App\Models\Stock;
+use App\Models\Goods;
+use App\Models\GoodsBanner;
 use Illuminate\Http\Request;
 use App\Http\Requests\CartRequest;
 
@@ -60,6 +63,18 @@ class CartController extends Controller
     // 获取个人列表
     public function list(CartRequest $request) {
         $carts = Cart::where('user_id', $request->user_id)->get();
+        foreach($carts as $item) {
+            $item->stock = Stock::where([
+                'goods_id' => $item->goods_id, 
+                'label_id' => $item->label_id
+                ])->first();
+            $item->goods = Goods::withTrashed()->find($item->goods_id);
+
+            // 封面图
+            $banner = GoodsBanner::where([ 'goods_id'=>$item->goods_id, ])->orderBy('active', 'desc')->first();
+
+            $item->defaultBanner = $banner->url;
+        }
         return $this->success($carts);
     }
 }
